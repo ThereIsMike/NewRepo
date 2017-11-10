@@ -43,8 +43,8 @@
             </ListView.ItemTemplate>
         </ListView>
         <StackPanel x:Name="stackPanel" MinHeight="20" Orientation="Horizontal">
-            <TextBox Width="200" ></TextBox>
-            <toggle:HorizontalToggleSwitch CheckedContent="" UncheckedContent="" Margin="10,0,0,0">
+            <TextBox  Width="200" Text="{Binding ProductName.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <toggle:HorizontalToggleSwitch CheckedContent="" UncheckedContent="" Margin="10,0,0,0" IsChecked="{Binding PushProduct.Value, Mode=TwoWay}">
                 <toggle:HorizontalToggleSwitch.CheckedBackground>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="White" Offset="1"/>
