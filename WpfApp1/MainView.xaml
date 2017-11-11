@@ -14,7 +14,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel MinHeight="20" Orientation="Horizontal" Name="StackPanelName">
-                        <TextBlock Foreground="Black"  Text="{Binding Path=Name}" Margin="10,0,20,0" FontFamily="Gadugi" FontSize="16"></TextBlock>
+                        <TextBlock Foreground="Black" MinWidth="50"  Text="{Binding Path=Name}" Margin="10,0,20,0" FontFamily="Gadugi" FontSize="16"></TextBlock>
                         <TextBlock Foreground="Black"  Text="Assign to " Margin="10,0,20,0" FontFamily="Gadugi" FontSize="16"></TextBlock>
                         <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}},Path=DataContext.UserList}">
                             <ComboBox.ItemTemplate>

@@ -25,21 +25,7 @@ namespace WpfApp1
         public MainViewModel()
         {
             Subscriptions();
-            using (var db = new ShoppingContext())
-            {
-    
-                foreach (var item in db.ShoppingAction)
-                {
-                    this.List.Add(item);
-                }
-
-                this.NumberofItems = this.List.Count();
- 
-                foreach (var item in db.BuyersAction)
-                {
-                    this.UserList.Add(item);
-                }
-            }
+            UpdateLists();
             
         }
 
@@ -49,19 +35,52 @@ namespace WpfApp1
             { if (x)
                 {
                     Console.WriteLine(this.ProductName.Value.ToString());
+                    using (var db = new ShoppingContext())
+                    {
+                        db.ShoppingAction.Add(new ShoppingList() { Name = this.ProductName.Value.ToString(), Assigned = new Buyers() { FirstName = "Michal", SecondName = "Kozik2" } });
+                        db.SaveChanges();
+                    }
                     this.ProductName.Value = "";
-                    this.ProductUpdated.Value = true;
+                   this.ProductUpdated.Value = true;
                 }
             });
 
-            Observable.Interval(TimeSpan.FromSeconds(0.5)).Subscribe(_ =>
+            Observable.Interval(TimeSpan.FromSeconds(0.5)).ObserveOnDispatcher().Subscribe(_ =>
             {
                 if (this.ProductUpdated.Value)
                 {
                     this.PushProduct.Value = !this.PushProduct.Value;
                     this.ProductUpdated.Value = false;
+
+                        UpdateLists();
+                   
+
                 }
             });
+
+            
+        }
+
+        void UpdateLists()
+        {
+            using (var db = new ShoppingContext())
+            {
+
+                foreach (var item in db.ShoppingAction)
+                {
+                    if(!this.List.Any(x=> x.Name == item.Name))
+                        this.List.Add(item);
+
+                }
+
+                this.NumberofItems = this.List.Count();
+
+                foreach (var item in db.BuyersAction)
+                {
+                    if (!this.UserList.Any(x => x.SecondName == item.SecondName))
+                        this.UserList.Add(item);
+                }
+            }
         }
     }
 }
