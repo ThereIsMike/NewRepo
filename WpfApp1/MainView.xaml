@@ -5,9 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:WpfApp1"
       xmlns:toggle="clr-namespace:ToggleSwitch;assembly=ToggleSwitch"
+      xmlns:converters="clr-namespace:WpfApp1.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="MainView">
+    <Page.Resources>
+        <converters:ToSelection x:Key="ToSomething" />
+    </Page.Resources>
     <StackPanel>
         <TextBlock Foreground="Black" FontFamily="Gadugi" FontSize="16" Text="{Binding NumberofItems, StringFormat= Number of items on your list {0}:}"></TextBlock>
         <ListView  ItemsSource="{Binding List}" MinHeight="100" x:Name="list">
@@ -16,10 +20,11 @@
                     <StackPanel MinHeight="20" Orientation="Horizontal" Name="StackPanelName">
                         <TextBlock Foreground="Black" MinWidth="50"  Text="{Binding Path=Name}" Margin="10,0,20,0" FontFamily="Gadugi" FontSize="16"></TextBlock>
                         <TextBlock Foreground="Black"  Text="Assign to " Margin="10,0,20,0" FontFamily="Gadugi" FontSize="16"></TextBlock>
-                        <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}},Path=DataContext.UserList}">
+                        <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}},Path=DataContext.UserList}" 
+                                  SelectedValue="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}},Path=DataContext.SelectedBuyer.Value, Mode=TwoWay}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Foreground="Black"  Text="{Binding Path=FirstName}" FontFamily="Gadugi" FontSize="16"></TextBlock>
+                                    <TextBlock Foreground="Black"  Text="{Binding Path=BuyerId}" FontFamily="Gadugi" FontSize="16"></TextBlock>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>

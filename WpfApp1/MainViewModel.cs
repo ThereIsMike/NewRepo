@@ -22,6 +22,9 @@ namespace WpfApp1
 
         public ReactiveProperty<string> ProductName { get; set; } = new ReactiveProperty<string>("Empty");
 
+        public ReactiveProperty<Buyers> SelectedBuyer { get; set; } = new ReactiveProperty<Buyers>();
+
+
         public MainViewModel()
         {
             Subscriptions();
@@ -58,7 +61,10 @@ namespace WpfApp1
                 }
             });
 
-            
+            this.SelectedBuyer.Skip(1).Select(x => (new ShoppingContext()).BuyersAction.Where(y => y.FirstName == x.FirstName)).Subscribe(z =>  Console.WriteLine(z.First().BuyerId.ToString()));
+
+            //this.SelectedBuyer.Skip(1).Subscribe(x  => Console.WriteLine(x));
+
         }
 
         void UpdateLists()
@@ -77,7 +83,7 @@ namespace WpfApp1
 
                 foreach (var item in db.BuyersAction)
                 {
-                    if (!this.UserList.Any(x => x.SecondName == item.SecondName))
+                    if (!this.UserList.Any(x => x.BuyerId == item.BuyerId))
                         this.UserList.Add(item);
                 }
             }

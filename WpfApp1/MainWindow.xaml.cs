@@ -25,15 +25,6 @@ namespace WpfApp1
         {
             this.DataContext = new MainViewModel();
             InitializeComponent();
-            
-            using (var db = new ShoppingContext())
-            {
-                if(db.BuyersAction.Count() ==0)
-                db.BuyersAction.Add(new Buyers() { FirstName = "Michal", SecondName = "Kozik" });
-                if(db.ShoppingAction.Count() == 0)
-                db.ShoppingAction.Add(new ShoppingList() { Name = "Butter" , Assigned = new Buyers() { FirstName = "Michal", SecondName = "Kozik2" } });
-                db.SaveChanges();
-            }
         }
     }
 }
