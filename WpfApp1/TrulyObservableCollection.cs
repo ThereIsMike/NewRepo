@@ -22,22 +22,25 @@ namespace WpfApp1
             {
                 foreach (Object item in e.NewItems)
                 {
-                    (item as INotifyPropertyChanged).PropertyChanged += new PropertyChangedEventHandler(item_PropertyChanged);
+                    (item as INotifyPropertyChanged).PropertyChanged += new PropertyChangedEventHandler(ItemPropertyChanged);
                 }
             }
             if (e.OldItems != null)
             {
                 foreach (Object item in e.OldItems)
                 {
-                    (item as INotifyPropertyChanged).PropertyChanged -= new PropertyChangedEventHandler(item_PropertyChanged);
+                    (item as INotifyPropertyChanged).PropertyChanged -= new PropertyChangedEventHandler(ItemPropertyChanged);
                 }
             }
         }
 
-        void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            NotifyCollectionChangedEventArgs a = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
-            OnCollectionChanged(a);
+            NotifyCollectionChangedEventArgs args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, sender, sender, IndexOf((T)sender));
+            OnCollectionChanged(args);
         }
+
+
+
     }
 }

@@ -17,7 +17,7 @@ namespace WpfApp1
         public IReactiveProperty<int> NumberofUsers { get; set; } = new ReactiveProperty<int>();
         public ObservableCollection<Products> List { get; set; } = new ObservableCollection<Products>();
 
-        public TrulyObservableCollection<ProductsShow> ListShow { get; set; } = new TrulyObservableCollection<ProductsShow>();
+        public ObservableCollection<ProductsShow> ListShow { get; set; } = new TrulyObservableCollection<ProductsShow>();
 
         public ObservableCollection<Buyers> UserList { get; set; } = new ObservableCollection<Buyers>();
 
@@ -67,17 +67,22 @@ namespace WpfApp1
                 }
             });
 
-            this.SelectedBuyer.Skip(1).Select(x => (new ShoppingContext()).BuyersAction.Where(y => y.FirstName == x.FirstName)).Subscribe(z =>  Console.WriteLine(z.First().BuyerId.ToString()));
+            //this.SelectedBuyer.Select(x => (new ShoppingContext()).BuyersAction.Where(y => y.FirstName == x.FirstName)).Subscribe(z =>  Console.WriteLine(z.First().BuyerId.ToString()));
 
-            this.ListShow.CollectionChanged += MyItemsSource_CollectionChanged;
+            this.ListShow.CollectionChanged += this.MyItemsSource_CollectionChanged;
             this.ListShow.CollectionChanged += (this.CollectionChangedMethod);
         }
         void MyItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Console.WriteLine("Changed");
+            var x = sender as TrulyObservableCollection<ProductsShow>;
+            if(x != null)
+            Console.WriteLine ($"Changed{x[0].Selected}");
+            
+
         }
         private void CollectionChangedMethod(object sender, NotifyCollectionChangedEventArgs e)
         {
+
             //different kind of changes that may have occurred in collection
             if (e.Action == NotifyCollectionChangedAction.Add)
             {

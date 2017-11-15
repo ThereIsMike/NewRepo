@@ -21,7 +21,7 @@
                         <TextBlock Foreground="Black" MinWidth="50"  Text="{Binding Path=Name}" Margin="10,0,20,0" FontFamily="Gadugi" FontSize="16"></TextBlock>
                         <TextBlock Foreground="Black"  Text="Assign to " Margin="10,0,20,0" FontFamily="Gadugi" FontSize="16"></TextBlock>
                         <ComboBox ItemsSource="{Binding UserList, Mode=TwoWay}" 
-                                  SelectedValue="{Binding UserSelected.Value}">
+                                  SelectedValue="{Binding UserSelected.Value, UpdateSourceTrigger=PropertyChanged}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Foreground="Black"  Text="{Binding Path=FirstName}" FontFamily="Gadugi" FontSize="16"></TextBlock>

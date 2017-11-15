@@ -12,14 +12,19 @@ namespace WpfApp1
     public class ProductsShow : ViewModelBase
     {
         public string Name { get; set; }
-        public ReactiveProperty<string> UserSelected { get; set; } = new ReactiveProperty<string>();
 
-        public ObservableCollection<Buyers> UserList { get; set; }  
-        
+        public string Selected { get; set; }
+        public ReactiveProperty<Buyers> UserSelected { get; set; } = new ReactiveProperty<Buyers>();
+
+        public ObservableCollection<Buyers> UserList { get; set; }
+
 
         public ProductsShow()
         {
-            UserSelected.Subscribe(x => RaisePropertyChangedEvent("MyProperty"));
+            this.UserSelected.Subscribe(x => {
+                if (x!=null)this.Selected = x.FirstName;
+                RaisePropertyChangedEvent(this.Name);
+            });
         }
     }
 }
