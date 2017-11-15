@@ -89,12 +89,17 @@
     </ApplicationDefinition>
     <Compile Include="Buyers.cs" />
     <Compile Include="Converters\ToSelection.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="ProductList.cs" />
+    <Compile Include="ProductsShow.cs" />
     <Compile Include="ShoppingContext.cs" />
-    <Compile Include="ShoppingList.cs" />
+    <Compile Include="Products.cs" />
+    <Compile Include="TrulyObservableCollection.cs" />
+    <Compile Include="ViewModelBase.cs" />
     <Page Include="MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

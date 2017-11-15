@@ -11,6 +11,8 @@ namespace WpfApp1
     {
         public DbSet<Buyers> BuyersAction { get; set; }
 
-        public DbSet<ShoppingList> ShoppingAction { get; set; }
+        public DbSet<Products> ProductAction { get; set; }
+
+        public DbSet<ProductList> ListAction { get; set; }
     }
 }
