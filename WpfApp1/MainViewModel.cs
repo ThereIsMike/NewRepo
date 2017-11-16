@@ -18,6 +18,7 @@ namespace WpfApp1
         public ObservableCollection<Products> List { get; set; } = new ObservableCollection<Products>();
 
         public ObservableCollection<ProductsShow> ListShow { get; set; } = new TrulyObservableCollection<ProductsShow>();
+        public Collection<string> ListShowDb { get; set; } = new Collection<string>();
 
         public ObservableCollection<Buyers> UserList { get; set; } = new ObservableCollection<Buyers>();
 
@@ -27,7 +28,7 @@ namespace WpfApp1
 
         public ReactiveProperty<string> ProductName { get; set; } = new ReactiveProperty<string>("Empty");
 
-        public ReactiveProperty<Buyers> SelectedBuyer { get; set; } = new ReactiveProperty<Buyers>();
+        //public ReactiveProperty<Buyers> SelectedBuyer { get; set; } = new ReactiveProperty<Buyers>();
 
 
         public MainViewModel()
@@ -70,14 +71,29 @@ namespace WpfApp1
             //this.SelectedBuyer.Select(x => (new ShoppingContext()).BuyersAction.Where(y => y.FirstName == x.FirstName)).Subscribe(z =>  Console.WriteLine(z.First().BuyerId.ToString()));
 
             this.ListShow.CollectionChanged += this.MyItemsSource_CollectionChanged;
-            this.ListShow.CollectionChanged += (this.CollectionChangedMethod);
+            //this.ListShow.CollectionChanged += (this.CollectionChangedMethod);
         }
         void MyItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var x = sender as TrulyObservableCollection<ProductsShow>;
-            if(x != null)
-            Console.WriteLine ($"Changed{x[0].Selected}");
-            
+            if(x != null && this.ListShowDb.Count == x.Count)
+                foreach (var item in x.Select((value, i) => new { i, value }))
+                {
+                    if (item.value.Selected != this.ListShowDb[item.i])
+                    {
+                        Console.WriteLine($"Assigned  { item.value.Selected} to buy { item.value.Name}" );
+                        this.ListShowDb[item.i] = item.value.Selected;
+                    }
+                }
+            if (x.Count != this.ListShowDb.Count)
+            {
+                this.ListShowDb.Clear();
+                foreach (var item in x)
+                {
+                    this.ListShowDb.Add(item.Selected);
+                }
+            }
+
 
         }
         private void CollectionChangedMethod(object sender, NotifyCollectionChangedEventArgs e)
