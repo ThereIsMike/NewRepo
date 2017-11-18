@@ -94,6 +94,7 @@ namespace WpfApp1
                             else
                             {
                                 db.DutyAction.Add(new ProductsShow() { Name = item.value.Name, Selected = item.value.Selected });
+                                db.SaveChanges();
                             }
                         }
                     }
@@ -176,8 +177,13 @@ namespace WpfApp1
                     }
                     if (!this.ListShow.Any(x => x.Name == item.Name))
                     {
-                        var selecteduser = db.DutyAction.SingleOrDefault(p => p.Name == item.Name).Selected;
-                        this.ListShow.Add(new ProductsShow { Name = item.Name, UserList = Li, UserSelected = new ReactiveProperty<Buyers>(this.UserList.SingleOrDefault(g=> g.FirstName == selecteduser )) });
+                        if (db.DutyAction.Any(p => p.Name == item.Name))
+                        {
+                            var selecteduser = db.DutyAction.SingleOrDefault(p => p.Name == item.Name).Selected;
+                            this.ListShow.Add(new ProductsShow { Name = item.Name, UserList = Li, UserSelected = new ReactiveProperty<Buyers>(this.UserList.SingleOrDefault(g => g.FirstName == selecteduser)) });
+                        }
+                        else
+                            this.ListShow.Add(new ProductsShow { Name = item.Name, UserList = Li });
                     }
              
                 }
