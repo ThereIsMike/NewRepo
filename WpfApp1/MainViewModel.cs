@@ -83,6 +83,19 @@ namespace WpfApp1
                     {
                         Console.WriteLine($"Assigned  { item.value.Selected} to buy { item.value.Name}" );
                         this.ListShowDb[item.i] = item.value.Selected;
+
+                        using (var db = new ShoppingContext())
+                        {
+                            if (db.DutyAction.Any(p => p.Name == item.value.Name))
+                            {
+                                db.DutyAction.SingleOrDefault(p => p.Name == item.value.Name).Selected = item.value.Selected;
+                                db.SaveChanges();
+                            }
+                            else
+                            {
+                                db.DutyAction.Add(new ProductsShow() { Name = item.value.Name, Selected = item.value.Selected });
+                            }
+                        }
                     }
                 }
             if (x.Count != this.ListShowDb.Count)
@@ -162,7 +175,10 @@ namespace WpfApp1
                         Li.Add(us);
                     }
                     if (!this.ListShow.Any(x => x.Name == item.Name))
-                        this.ListShow.Add(new ProductsShow {Name =  item.Name,  UserList = Li });
+                    {
+                        var selecteduser = db.DutyAction.SingleOrDefault(p => p.Name == item.Name).Selected;
+                        this.ListShow.Add(new ProductsShow { Name = item.Name, UserList = Li, UserSelected = new ReactiveProperty<Buyers>(this.UserList.SingleOrDefault(g=> g.FirstName == selecteduser )) });
+                    }
              
                 }
             }
