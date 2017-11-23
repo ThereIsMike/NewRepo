@@ -29,7 +29,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                         <TextBlock Foreground="Black"  Text="Done" Margin="10,0,20,0" FontFamily="Gadugi" FontSize="16"></TextBlock>
-                        <toggle:HorizontalToggleSwitch CheckedContent="" UncheckedContent="" Margin="10,0,0,0">
+                        <toggle:HorizontalToggleSwitch CheckedContent="" UncheckedContent="" Margin="10,0,0,0" IsChecked="{Binding BuyExecuted.Value, Mode=TwoWay}">
                             <toggle:HorizontalToggleSwitch.CheckedBackground>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="White" Offset="1"/>

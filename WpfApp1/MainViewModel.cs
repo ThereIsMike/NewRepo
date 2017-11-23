@@ -81,7 +81,7 @@ namespace WpfApp1
                 {
                     if (item.value.Selected != this.ListShowDb[item.i])
                     {
-                        Console.WriteLine($"Assigned  { item.value.Selected} to buy { item.value.Name}" );
+                        Console.WriteLine($"Assigned  { item.value.Selected} to buy { item.value.Name}");
                         this.ListShowDb[item.i] = item.value.Selected;
 
                         using (var db = new ShoppingContext())
@@ -97,6 +97,19 @@ namespace WpfApp1
                                 db.SaveChanges();
                             }
                         }
+                    }
+                    else 
+                    {
+                        using (var db = new ShoppingContext())
+                        {
+                            if (item.value.Executed != db.DutyAction.SingleOrDefault(g => g.Name == item.value.Name).Executed)
+                            {
+                                Console.WriteLine($" {item.value.Name}  was bought = {item.value.Executed}");
+                                db.DutyAction.SingleOrDefault(g => g.Name == item.value.Name).Executed = item.value.Executed;
+                                db.SaveChanges();
+                            }
+                        }
+                        
                     }
                 }
             if (x.Count != this.ListShowDb.Count)
@@ -180,7 +193,7 @@ namespace WpfApp1
                         if (db.DutyAction.Any(p => p.Name == item.Name))
                         {
                             var selecteduser = db.DutyAction.SingleOrDefault(p => p.Name == item.Name).Selected;
-                            this.ListShow.Add(new ProductsShow { Name = item.Name, UserList = Li, UserSelected = new ReactiveProperty<Buyers>(this.UserList.SingleOrDefault(g => g.FirstName == selecteduser)) });
+                            this.ListShow.Add(new ProductsShow (new ReactiveProperty<Buyers>(this.UserList.SingleOrDefault(g => g.FirstName == selecteduser )), new ReactiveProperty<bool>(db.DutyAction.SingleOrDefault(p => p.Name == item.Name).Executed)) { Name = item.Name, UserList = Li });
                         }
                         else
                             this.ListShow.Add(new ProductsShow { Name = item.Name, UserList = Li });

@@ -15,17 +15,49 @@ namespace WpfApp1
         public string Name { get; set; }
 
         public string Selected { get; set; }
-        public ReactiveProperty<Buyers> UserSelected { get; set; } = new ReactiveProperty<Buyers>();
+        public  ReactiveProperty<Buyers> UserSelected { get; set; } = new ReactiveProperty<Buyers>();
 
         public ObservableCollection<Buyers> UserList { get; set; }
+
+        public ReactiveProperty<bool> BuyExecuted { get; set; } = new ReactiveProperty<bool>();
+
+        public bool Executed { get; set; }
 
 
         public ProductsShow()
         {
-            this.UserSelected.Subscribe(x => {
+            UserSelected.Subscribe(x => {
                 if (x!=null)this.Selected = x.FirstName;
                 RaisePropertyChangedEvent(this.Name);
             });
+
+            BuyExecuted.Subscribe(x => {
+                this.Executed = x;
+                RaisePropertyChangedEvent(this.Name);
+            });
+        }
+
+        public ProductsShow(ReactiveProperty<Buyers> UsrSel, ReactiveProperty<bool> BuyExe)
+        {
+            this.UserSelected = UsrSel;
+            UserSelected.Subscribe(x => {
+                if (x != null) this.Selected = x.FirstName;
+                RaisePropertyChangedEvent(this.Name);
+            });
+            this.BuyExecuted = BuyExe;
+            this.BuyExecuted.Subscribe(x => {
+                this.Executed = x;
+                RaisePropertyChangedEvent(this.Name);
+            });
+        }
+        public ProductsShow(ReactiveProperty<Buyers> UsrSel)
+        {
+            this.UserSelected = UsrSel;
+            UserSelected.Subscribe(x => {
+                if (x != null) this.Selected = x.FirstName;
+                RaisePropertyChangedEvent(this.Name);
+            });
+          
         }
     }
 }
