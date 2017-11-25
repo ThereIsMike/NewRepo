@@ -26,21 +26,26 @@ namespace WpfApp1
 
         public ProductsShow()
         {
-            UserSelected.Subscribe(x => {
+            this.UserSelected.Subscribe(x => {
                 if (x!=null)this.Selected = x.FirstName;
                 RaisePropertyChangedEvent(this.Name);
             });
 
-            BuyExecuted.Subscribe(x => {
+            this.BuyExecuted.Subscribe(x => {
                 this.Executed = x;
                 RaisePropertyChangedEvent(this.Name);
             });
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductsShow"/> class. Needed when selection has been already made.
+        /// </summary>
+        /// <param name="UsrSel">The usr sel.</param>
+        /// <param name="BuyExe">The buy executable.</param>
         public ProductsShow(ReactiveProperty<Buyers> UsrSel, ReactiveProperty<bool> BuyExe)
         {
             this.UserSelected = UsrSel;
-            UserSelected.Subscribe(x => {
+            this.UserSelected.Subscribe(x => {
                 if (x != null) this.Selected = x.FirstName;
                 RaisePropertyChangedEvent(this.Name);
             });
@@ -53,7 +58,7 @@ namespace WpfApp1
         public ProductsShow(ReactiveProperty<Buyers> UsrSel)
         {
             this.UserSelected = UsrSel;
-            UserSelected.Subscribe(x => {
+            this.UserSelected.Subscribe(x => {
                 if (x != null) this.Selected = x.FirstName;
                 RaisePropertyChangedEvent(this.Name);
             });

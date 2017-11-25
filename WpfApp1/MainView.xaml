@@ -48,6 +48,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <StackPanel x:Name="stackPanel" MinHeight="20" Orientation="Horizontal">
+            <TextBlock Width="25" Text="Add" Foreground="Black" VerticalAlignment="Bottom"/>
             <TextBox  Width="200" Text="{Binding ProductName.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <toggle:HorizontalToggleSwitch CheckedContent="" UncheckedContent="" Margin="10,0,0,0" IsChecked="{Binding PushProduct.Value, Mode=TwoWay}">
                 <toggle:HorizontalToggleSwitch.CheckedBackground>
