@@ -6,7 +6,19 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Window.Content>
-        <local:MainView></local:MainView>
-    </Window.Content>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type local:MainViewModel}">
+                <local:MainView/>
+            </DataTemplate>
+        <DataTemplate DataType="{x:Type local:UserViewModel}">
+            <local:UserView/>
+        </DataTemplate>
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+        <StackPanel x:Name="navigation" DockPanel.Dock="Left">
+            <Button Content="User" Height="50" Width="50" Command="{Binding UserCommand}"></Button>
+            <Button Content="Main" Height="50" Width="50" Command="{Binding MainCommand}"></Button>
+        </StackPanel>
+        <ContentControl x:Name="Pages" DockPanel.Dock="Right" Content="{Binding SelectedViewModel}"/>
+    </DockPanel>
 </Window>

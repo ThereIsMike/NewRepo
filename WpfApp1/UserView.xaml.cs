@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,13 +16,12 @@ using System.Windows.Shapes;
 namespace WpfApp1
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for UserView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class UserView : UserControl
     {
-        public MainWindow()
+        public UserView()
         {
-            this.DataContext = new NavigationViewModel();
             InitializeComponent();
         }
     }
