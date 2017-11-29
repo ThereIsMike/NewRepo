@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -34,7 +35,7 @@ namespace WpfApp1
             Subscriptions();
             UpdateLists();          
         }
-
+        
         void Subscriptions()
         {      
             // Pushing new products to the product db
@@ -44,7 +45,7 @@ namespace WpfApp1
                 {
                     //Just Showing product name
                     Console.WriteLine(this.ProductName.Value.ToString());
-                    using (var db = new ShoppingContext())
+                    using (var db = new ShoppingContext(UserViewModel.Instance.DynamicConnectionString("*")))
                     {
                         db.ProductAction.Add(new Products() { Name = this.ProductName.Value.ToString() });
                         db.SaveChanges();
@@ -81,7 +82,7 @@ namespace WpfApp1
                         // Updating the element in the list
                         this.ListShowDb[item.i] = item.value.Selected;
 
-                        using (var db = new ShoppingContext())
+                        using (var db = new ShoppingContext(UserViewModel.Instance.DynamicConnectionString("*")))
                         {
                             if (db.DutyAction.Any(p => p.Name == item.value.Name))
                             {
@@ -99,7 +100,7 @@ namespace WpfApp1
                     }
                     else 
                     {
-                        using (var db = new ShoppingContext())
+                        using (var db = new ShoppingContext(UserViewModel.Instance.DynamicConnectionString("*")))
                         {
                             // this is executed when shopping was done
                             var excuted = db.DutyAction.SingleOrDefault(g => g.Name == item.value.Name);
@@ -126,7 +127,7 @@ namespace WpfApp1
         }
         void UpdateLists()
         {
-            using (var db = new ShoppingContext())
+            using (var db = new ShoppingContext(UserViewModel.Instance.DynamicConnectionString("*")))
             {
                 foreach (var item in db.ProductAction)
                 {
