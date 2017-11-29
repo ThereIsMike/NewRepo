@@ -8,6 +8,30 @@
       d:DesignHeight="300" d:DesignWidth="300">
 
     <Grid>
-        <Label>Login to your account</Label> 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Label Grid.ColumnSpan="2" HorizontalAlignment="Center">Login to your account</Label>
+        <Label Grid.Row="1" HorizontalAlignment="Center">ID</Label>
+        <Label Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center">Password</Label>
+        <TextBox Grid.Row="2" Grid.Column="0"></TextBox>
+        <PasswordBox Grid.Row="2" Grid.Column="1"></PasswordBox>
+        <Button Grid.Row="3" Grid.ColumnSpan="2">Login</Button>
+        <Label Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center">User Options</Label>
+        <Label Grid.Row="5" HorizontalAlignment="Center">User</Label>
+        <Label Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center">Password</Label>
+        <Button Grid.Row="6">Add</Button>
+        <Button Grid.Row="6" Grid.Column="1">Remove</Button>
     </Grid>
 </UserControl>
