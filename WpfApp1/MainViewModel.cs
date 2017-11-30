@@ -45,7 +45,7 @@ namespace WpfApp1
                 {
                     //Just Showing product name
                     Console.WriteLine(this.ProductName.Value.ToString());
-                    using (var db = new ShoppingContext(UserViewModel.Instance.DynamicConnectionString("*")))
+                    using (var db = new ShoppingContext(UserViewModel.Instance.DbDataSource))
                     {
                         db.ProductAction.Add(new Products() { Name = this.ProductName.Value.ToString() });
                         db.SaveChanges();
@@ -82,7 +82,7 @@ namespace WpfApp1
                         // Updating the element in the list
                         this.ListShowDb[item.i] = item.value.Selected;
 
-                        using (var db = new ShoppingContext(UserViewModel.Instance.DynamicConnectionString("*")))
+                        using (var db = new ShoppingContext(UserViewModel.Instance.DbDataSource))
                         {
                             if (db.DutyAction.Any(p => p.Name == item.value.Name))
                             {
@@ -100,7 +100,7 @@ namespace WpfApp1
                     }
                     else 
                     {
-                        using (var db = new ShoppingContext(UserViewModel.Instance.DynamicConnectionString("*")))
+                        using (var db = new ShoppingContext(UserViewModel.Instance.DbDataSource))
                         {
                             // this is executed when shopping was done
                             var excuted = db.DutyAction.SingleOrDefault(g => g.Name == item.value.Name);
@@ -127,7 +127,7 @@ namespace WpfApp1
         }
         void UpdateLists()
         {
-            using (var db = new ShoppingContext(UserViewModel.Instance.DynamicConnectionString("*")))
+            using (var db = new ShoppingContext(UserViewModel.Instance.DbDataSource))
             {
                 foreach (var item in db.ProductAction)
                 {

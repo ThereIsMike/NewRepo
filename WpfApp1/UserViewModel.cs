@@ -25,6 +25,8 @@ namespace WpfApp1
 
         public ReactiveCommand<object> Login { get; set; } = new ReactiveCommand<object>();
 
+        public string DbDataSource { get; set; } =  "empty";
+
         private static UserViewModel _instance = new UserViewModel();
         public static UserViewModel Instance { get { return _instance; } }
 
@@ -32,13 +34,14 @@ namespace WpfApp1
         public UserViewModel()
         {
             Subscriptions();
+            _instance = this;
         }
 
         private void Subscriptions()
         {
             this.DbConnection.Subscribe(x =>
             {
-                    EnableRemoteLogin.Value = x;
+                    EnableRemoteLogin.Value = !x;
 
             });
 
@@ -69,7 +72,7 @@ namespace WpfApp1
             SqlConnection myConnection = new SqlConnection();
 
             SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
-            myBuilder.UserID = "president@mylearningcurve.database.windows.net";
+            myBuilder.UserID = DbId.Value + "@mylearningcurve.database.windows.net";
             myBuilder.Password = pw;
             myBuilder.InitialCatalog = "Shopping";
             myBuilder.DataSource = "tcp:mylearningcurve.database.windows.net,1433";
@@ -78,6 +81,7 @@ namespace WpfApp1
             myBuilder.Encrypt = true;
             myBuilder.TrustServerCertificate = false;
             myBuilder.MultipleActiveResultSets = false;
+            this.DbDataSource = myBuilder.ConnectionString;
             return myBuilder.ConnectionString;
         }
     }

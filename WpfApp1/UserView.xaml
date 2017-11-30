@@ -45,8 +45,8 @@
         <Label Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center">Password</Label>
         <TextBox Grid.Row="4" Grid.Column="0" Text="{Binding DbId.Value}" IsEnabled="{Binding EnableRemoteLogin.Value}" RenderTransformOrigin="0.5,0.5">
         </TextBox>
-        <PasswordBox x:Name="Passwd" Grid.Row="4" Grid.Column="1" FontFamily="Pass" PasswordChar="*"></PasswordBox>
-        <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding Login}" CommandParameter="{Binding ElementName=Passwd}">Login</Button>
+        <PasswordBox x:Name="Passwd" Grid.Row="4" Grid.Column="1" FontFamily="Pass" PasswordChar="*" IsEnabled="{Binding EnableRemoteLogin.Value}"></PasswordBox>
+        <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding Login}" CommandParameter="{Binding ElementName=Passwd}" IsEnabled="{Binding EnableRemoteLogin.Value}">Login</Button>
         <Label Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center">User Options</Label>
         <Label Grid.Row="7" HorizontalAlignment="Center">User</Label>
         <Label Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center">Password</Label>
