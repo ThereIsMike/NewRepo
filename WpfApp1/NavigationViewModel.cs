@@ -26,7 +26,7 @@ namespace WpfApp1
         }
         private void OpenUser(object obj)
         {
-            if (UserViewModel.Instance.DbDataSource == "empty")
+            if (!UserViewModel.Instance.isLoaded)
                 this.SelectedViewModel = new UserViewModel();
             else
                 this.SelectedViewModel = UserViewModel.Instance;

@@ -29,11 +29,14 @@ namespace WpfApp1
 
         public ReactiveProperty<string> ProductName { get; set; } = new ReactiveProperty<string>("Product");
 
+        public bool isLoaded { get; set; }
+
 
         public MainViewModel()
         {
             Subscriptions();
-            UpdateLists();          
+            UpdateLists();
+            isLoaded = true;
         }
         
         void Subscriptions()

@@ -27,6 +27,8 @@ namespace WpfApp1
 
         public string DbDataSource { get; set; } =  "empty";
 
+        public bool isLoaded { get; set; } = false;
+
         private static UserViewModel _instance = new UserViewModel();
         public static UserViewModel Instance { get { return _instance; } }
 
@@ -35,6 +37,7 @@ namespace WpfApp1
         {
             Subscriptions();
             _instance = this;
+            isLoaded = true;
         }
 
         private void Subscriptions()
