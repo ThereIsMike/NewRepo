@@ -13,11 +13,11 @@ namespace WpfApp1
         {
         }
 
-        public DbSet<Buyers> BuyersAction { get; set; }
+        public DbSet<User> BuyersAction { get; set; }
 
-        public DbSet<Products> ProductAction { get; set; }
+        public DbSet<Item> ProductAction { get; set; }
 
-        public DbSet<ProductsShow> DutyAction { get; set; }
+        public DbSet<Status> DutyAction { get; set; }
        
     }
 }

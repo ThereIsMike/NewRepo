@@ -1,4 +1,5 @@
-﻿using Reactive.Bindings;
+﻿using Microsoft.Azure.Mobile.Server;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,21 +11,21 @@ using System.Threading.Tasks;
 
 namespace WpfApp1
 {
-    public class ProductsShow : ViewModelBase
-    {   [Key]
+  
+    public class Status :  EntityData, IViewModelBase
+    { 
         public string Name { get; set; }
 
         public string Selected { get; set; }
-        public  ReactiveProperty<Buyers> UserSelected { get; set; } = new ReactiveProperty<Buyers>();
+        public  ReactiveProperty<User> UserSelected { get; set; } = new ReactiveProperty<User>();
 
-        public ObservableCollection<Buyers> UserList { get; set; }
+        public ObservableCollection<User> UserList { get; set; }
 
         public ReactiveProperty<bool> BuyExecuted { get; set; } = new ReactiveProperty<bool>();
 
         public bool Executed { get; set; }
 
-
-        public ProductsShow()
+        public Status()
         {
             this.UserSelected.Subscribe(x => {
                 if (x!=null)this.Selected = x.FirstName;
@@ -42,7 +43,7 @@ namespace WpfApp1
         /// </summary>
         /// <param name="UsrSel">The usr sel.</param>
         /// <param name="BuyExe">The buy executable.</param>
-        public ProductsShow(ReactiveProperty<Buyers> UsrSel, ReactiveProperty<bool> BuyExe)
+        public Status(ReactiveProperty<User> UsrSel, ReactiveProperty<bool> BuyExe)
         {
             this.UserSelected = UsrSel;
             this.UserSelected.Subscribe(x => {
@@ -55,7 +56,7 @@ namespace WpfApp1
                 RaisePropertyChangedEvent(this.Name);
             });
         }
-        public ProductsShow(ReactiveProperty<Buyers> UsrSel)
+        public Status(ReactiveProperty<User> UsrSel)
         {
             this.UserSelected = UsrSel;
             this.UserSelected.Subscribe(x => {
@@ -64,5 +65,17 @@ namespace WpfApp1
             });
           
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChangedEvent(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                PropertyChanged(this, e);
+            }
+        }
     }
+
 }

@@ -13,7 +13,7 @@ namespace WpfApp1.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if(value != null)
-                return (Buyers)value;
+                return (User)value;
             else
                 return null;
         }

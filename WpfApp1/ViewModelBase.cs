@@ -8,17 +8,10 @@ using System.Threading.Tasks;
 
 namespace WpfApp1
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    interface IViewModelBase : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void RaisePropertyChangedEvent(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
-                PropertyChanged(this, e);
-            }
-        }
+        event PropertyChangedEventHandler PropertyChanged;
+        void RaisePropertyChangedEvent(string propertyName);
+       
     }
 }

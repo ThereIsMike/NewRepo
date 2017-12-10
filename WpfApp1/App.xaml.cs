@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,6 @@ namespace WpfApp1
     /// </summary>
     public partial class App : Application
     {
+        public static MobileServiceClient MobileService = new MobileServiceClient("https://*.azurewebsites.net");
     }
 }

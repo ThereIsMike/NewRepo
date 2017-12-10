@@ -1,4 +1,5 @@
-﻿using Reactive.Bindings;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,20 +9,21 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace WpfApp1
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : IViewModelBase
     {
         public IReactiveProperty<int> NumberofItems { get; set; } = new ReactiveProperty<int>();
 
         public IReactiveProperty<int> NumberofUsers { get; set; } = new ReactiveProperty<int>();
-        public ObservableCollection<Products> List { get; set; } = new ObservableCollection<Products>();
+        public ObservableCollection<Item> List { get; set; } = new ObservableCollection<Item>();
 
-        public ObservableCollection<ProductsShow> ListShow { get; set; } = new TrulyObservableCollection<ProductsShow>();
+        public ObservableCollection<Status> ListShow { get; set; } = new TrulyObservableCollection<Status>();
         public Collection<string> ListShowDb { get; set; } = new Collection<string>();
 
-        public ObservableCollection<Buyers> UserList { get; set; } = new ObservableCollection<Buyers>();
+        public ObservableCollection<User> UserList { get; set; } = new ObservableCollection<User>();
 
         public ReactiveProperty<bool> PushProduct { get; set; } = new ReactiveProperty<bool>();
 
@@ -32,31 +34,30 @@ namespace WpfApp1
         public bool isLoaded { get; set; }
 
 
-        public MainViewModel()
+         public MainViewModel()
         {
+            
             Subscriptions();
             UpdateLists();
             isLoaded = true;
         }
-        
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         void Subscriptions()
         {      
             // Pushing new products to the product db
-            this.PushProduct.Subscribe(x => 
-            {
-                if (x)
-                {
-                    //Just Showing product name
-                    Console.WriteLine(this.ProductName.Value.ToString());
-                    using (var db = new ShoppingContext(UserViewModel.Instance.DbDataSource))
-                    {
-                        db.ProductAction.Add(new Products() { Name = this.ProductName.Value.ToString() });
-                        db.SaveChanges();
-                    }
-                    this.ProductName.Value = "";
-                    this.ProductUpdated.Value = true;
-                }
-            });
+            this.PushProduct.Subscribe(async x =>
+           {
+               if (x)
+               {
+                   //Just Showing product name
+                   Console.WriteLine(this.ProductName.Value.ToString());
+                   await App.MobileService.GetTable<Item>().InsertAsync(new Item() { Name = this.ProductName.Value.ToString() });
+                   this.ProductName.Value = "";
+                   this.ProductUpdated.Value = true;
+               }
+           });
             // If slader moved to add new product.
             Observable.Interval(TimeSpan.FromSeconds(0.5)).ObserveOnDispatcher().Subscribe(_ =>
             {
@@ -68,12 +69,13 @@ namespace WpfApp1
                 }
             });
             // Adding event to the handler, so we can react on collection change
-            this.ListShow.CollectionChanged += this.MyItemsSource_CollectionChanged;
+            this.ListShow.CollectionChanged += this.MyItemsSource_CollectionChangedAsync;
         }
-        void MyItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+
+        async void MyItemsSource_CollectionChangedAsync(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var x = sender as TrulyObservableCollection<ProductsShow>;
-            if(x != null && this.ListShowDb.Count == x.Count)
+            var x = sender as TrulyObservableCollection<Status>;
+            if (x != null && this.ListShowDb.Count == x.Count)
                 // i is the index
                 foreach (var item in x.Select((value, i) => new { i, value }))
                 {
@@ -85,38 +87,43 @@ namespace WpfApp1
                         // Updating the element in the list
                         this.ListShowDb[item.i] = item.value.Selected;
 
-                        using (var db = new ShoppingContext(UserViewModel.Instance.DbDataSource))
+                        IMobileServiceTable<Status> _status = App.MobileService.GetTable<Status>();
+                        MobileServiceCollection<Status, Status> _statusenum = await _status
+                                .Where(u => u.Name != string.Empty)
+                                .ToCollectionAsync();
+                        if (_statusenum.Any(p => p.Name == item.value.Name))
                         {
-                            if (db.DutyAction.Any(p => p.Name == item.value.Name))
-                            {
-                                // Updating the db with the buyer name selected information
-                                db.DutyAction.SingleOrDefault(p => p.Name == item.value.Name).Selected = item.value.Selected;
-                                db.SaveChanges();
-                            }
-                            else
-                            {
-                                // Adding information into db with the buyer name selected
-                                db.DutyAction.Add(new ProductsShow() { Name = item.value.Name, Selected = item.value.Selected });
-                                db.SaveChanges();
-                            }
+                            // Updating the db with the buyer name selected information
+                           var modified =  _statusenum.SingleOrDefault(p => p.Name == item.value.Name);
+                            var cc = await _status.LookupAsync(modified.Id);
+                            await _status.DeleteAsync(cc);
+                            cc.Selected = item.value.Selected;
+                            await _status.InsertAsync(cc);
+                        }
+                        else
+                        {
+                            // Adding information into db with the buyer name selected
+                            await App.MobileService.GetTable<Status>().InsertAsync(new Status() { Name = item.value.Name, Selected = item.value.Selected, CreatedAt = null });
                         }
                     }
-                    else 
+                    else
                     {
-                        using (var db = new ShoppingContext(UserViewModel.Instance.DbDataSource))
-                        {
-                            // this is executed when shopping was done
-                            var excuted = db.DutyAction.SingleOrDefault(g => g.Name == item.value.Name);
+                        // this is executed when shopping was done
+                        IMobileServiceTable<Status> _status = App.MobileService.GetTable<Status>();
+                        MobileServiceCollection<Status, Status> _statusenum = await _status
+                                .Where(u => u.Name != string.Empty)
+                                .ToCollectionAsync();
+                        var excuted = _statusenum.SingleOrDefault(g => g.Name == item.value.Name);
 
                             if (excuted != null && item.value.Executed != excuted.Executed)
                             {
-                                // Changing information about execution
-                                Console.WriteLine($" {item.value.Name}  was bought = {item.value.Executed}");
-                                db.DutyAction.SingleOrDefault(g => g.Name == item.value.Name).Executed = item.value.Executed;
-                                db.SaveChanges();
-                            }
+                            // Changing information about execution
+                            Console.WriteLine($" {item.value.Name}  was bought = {item.value.Executed}");
+                            var modified = _statusenum.SingleOrDefault(g => g.Name == item.value.Name);
+                            await App.MobileService.GetTable<Status>().DeleteAsync(modified);
+                            modified.Executed = item.value.Executed;
+                            await App.MobileService.GetTable<Status>().InsertAsync(modified);
                         }
-                        
                     }
                 }
             if (x.Count != this.ListShowDb.Count)
@@ -128,41 +135,40 @@ namespace WpfApp1
                 }
             }
         }
-        void UpdateLists()
+        async void UpdateLists()
         {
-            using (var db = new ShoppingContext(UserViewModel.Instance.DbDataSource))
-            {
-                foreach (var item in db.ProductAction)
+            IMobileServiceTable<Item> _products = App.MobileService.GetTable<Item>();
+            MobileServiceCollection<Item, Item> _productsenum = await _products
+                    .Where(i => i.Name != string.Empty)
+                    .ToCollectionAsync();
+            foreach (var item in _productsenum)
                 {
                     // Adding products to the list from the db
-                    if(!this.List.Any(x=> x.Name == item.Name))
-                        this.List.Add(item);                      
+                    if (!this.List.Any(x => x.Name == item.Name))
+                        this.List.Add(item);
                 }
                 // Gettings number of products
                 this.NumberofItems.Value = this.List.Count();
 
-                foreach (var item in db.BuyersAction)
-                {
-                    if (!this.UserList.Any(x => x.BuyerId == item.BuyerId))
+            
+            IMobileServiceTable<User> _users = App.MobileService.GetTable<User>();
+            MobileServiceCollection<User, User> _usersenum = await _users
+                    .Where(u => u.FirstName != string.Empty)
+                    .ToCollectionAsync();
+            foreach (var user in _usersenum)
+            {
+                    if (!this.UserList.Any(x => x.Id == user.Id))
                     {
                         // Adding users to the list from the db
-                        this.UserList.Add(item);
+                        this.UserList.Add(user);
                     }
-                }
+             }
                 // Gettings number of buyers
                 this.NumberofUsers.Value = this.UserList.Count();
 
-                // Two default users if buers list is empty
-                if(this.NumberofUsers.Value == 0)
-                {
-                    db.BuyersAction.Add(new Buyers  {FirstName = "Ana", SecondName = "Superb" });
-                    db.BuyersAction.Add(new Buyers { FirstName = "Mike", SecondName = "EvenBetter" });
-                    db.SaveChanges();
-                    UpdateLists();
-                }
                 foreach (var item in this.List)
                 {
-                    var Li = new ObservableCollection<Buyers>();
+                    var Li = new ObservableCollection<User>();
                     foreach (var us in this.UserList)
                     {
                         // Gettings Buyers list from the db 
@@ -170,23 +176,32 @@ namespace WpfApp1
                     }
                     if (!this.ListShow.Any(x => x.Name == item.Name))
                     {
-                        if (db.DutyAction.Any(p => p.Name == item.Name))
+                    IMobileServiceTable<Status> _status = App.MobileService.GetTable<Status>();
+                    MobileServiceCollection<Status, Status> _statusenum = await _status
+                            .Where(u => u.Name != string.Empty)
+                            .ToCollectionAsync();
+                    if (_statusenum.Any(p => p.Name == item.Name))
                         {
                             // Get selection from the db and show
-                            var selecteduser = db.DutyAction.SingleOrDefault(p => p.Name == item.Name).Selected;
-                            this.ListShow.Add(new ProductsShow(new ReactiveProperty<Buyers>(this.UserList.SingleOrDefault(g => g.FirstName == selecteduser)), new ReactiveProperty<bool>(db.DutyAction.SingleOrDefault(p => p.Name == item.Name).Executed)) { Name = item.Name, UserList = Li });
+                            var selecteduser = _statusenum.SingleOrDefault(p => p.Name == item.Name).Selected;
+                            this.ListShow.Add(new Status(new ReactiveProperty<User>(this.UserList.SingleOrDefault(g => g.FirstName == selecteduser)), new ReactiveProperty<bool>(_statusenum.SingleOrDefault(p => p.Name == item.Name).Executed)) { Name = item.Name, UserList = Li });
                         }
                         else
                         {
                             // Get selection from the db and show
-                            this.ListShow.Add(new ProductsShow { Name = item.Name, UserList = Li });
+                            this.ListShow.Add(new Status { Name = item.Name, UserList = Li });
                         }
                     }
-             
                 }
-            }
         }
 
-       
+        public void RaisePropertyChangedEvent(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+                PropertyChanged(this, e);
+            }
+        }
     }
 }
