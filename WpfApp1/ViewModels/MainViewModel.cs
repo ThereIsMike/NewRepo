@@ -39,7 +39,7 @@ namespace WpfApp1
             
             Subscriptions();
             UpdateLists();
-            isLoaded = true;
+            this.isLoaded = true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

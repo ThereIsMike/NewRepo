@@ -14,6 +14,6 @@ namespace WpfApp1
     /// </summary>
     public partial class App : Application
     {
-        public static MobileServiceClient MobileService = new MobileServiceClient("https://*.azurewebsites.net");
+        public static MobileServiceClient MobileService;
     }
 }

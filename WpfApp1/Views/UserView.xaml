@@ -24,9 +24,13 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Label Grid.ColumnSpan="2" HorizontalAlignment="Center">Data BAse Connection</Label>
-        <toggle:HorizontalToggleSwitch Grid.Row="1" CheckedContent="Local" UncheckedContent="Remote" IsChecked="{Binding DbConnection.Value, Mode=TwoWay}">
+        <Label Grid.ColumnSpan="2" HorizontalAlignment="Center" >Service address</Label>
+        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding ServiceName.Value, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Label Grid.ColumnSpan="2" HorizontalAlignment="Center" Grid.Row="2">Data BAse Connection</Label>
+        <toggle:HorizontalToggleSwitch Grid.Row="3" CheckedContent="Local" UncheckedContent="Remote" IsChecked="{Binding DbConnection.Value, Mode=TwoWay}" Margin="31,0">
             <toggle:HorizontalToggleSwitch.UncheckedBackground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF5B00C8" Offset="1"/>
@@ -40,19 +44,19 @@
                 </LinearGradientBrush>
             </toggle:HorizontalToggleSwitch.CheckedBackground>
         </toggle:HorizontalToggleSwitch>
-        <Label Grid.ColumnSpan="2" Grid.Row="2" HorizontalAlignment="Center">Login to your account</Label>
-        <Label Grid.Row="3" HorizontalAlignment="Center">ID</Label>
-        <Label Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center">Password</Label>
-        <TextBox Grid.Row="4" Grid.Column="0" Text="{Binding DbId.Value}" IsEnabled="{Binding EnableRemoteLogin.Value}" RenderTransformOrigin="0.5,0.5">
+        <Label Grid.ColumnSpan="2" Grid.Row="4" HorizontalAlignment="Center">Login to your account</Label>
+        <Label Grid.Row="5" HorizontalAlignment="Center">ID</Label>
+        <Label Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center">Password</Label>
+        <TextBox Grid.Row="6" Grid.Column="0" Text="{Binding DbId.Value}" IsEnabled="{Binding EnableRemoteLogin.Value}" RenderTransformOrigin="0.5,0.5">
         </TextBox>
-        <PasswordBox x:Name="Passwd" Grid.Row="4" Grid.Column="1" FontFamily="Pass" PasswordChar="*" IsEnabled="{Binding EnableRemoteLogin.Value}"></PasswordBox>
-        <Button Grid.Row="5" Grid.ColumnSpan="2" Command="{Binding Login}" CommandParameter="{Binding ElementName=Passwd}" IsEnabled="{Binding EnableRemoteLogin.Value}">Login</Button>
-        <Label Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Center">User Options</Label>
-        <Label Grid.Row="7" HorizontalAlignment="Center">User</Label>
-        <Label Grid.Row="7" Grid.Column="2" HorizontalAlignment="Center">Password</Label>
-        <TextBox Grid.Row="8" Grid.Column="0"></TextBox>
-        <TextBox Grid.Row="8" Grid.Column="1"></TextBox>
-        <Button Grid.Row="9">Add</Button>
-        <Button Grid.Row="9" Grid.Column="1">Remove</Button>
+        <PasswordBox x:Name="Passwd" Grid.Row="6" Grid.Column="1" FontFamily="Pass" PasswordChar="*" IsEnabled="{Binding EnableRemoteLogin.Value}"></PasswordBox>
+        <Button Grid.Row="7" Grid.ColumnSpan="2" Command="{Binding Login}" CommandParameter="{Binding ElementName=Passwd}" IsEnabled="{Binding EnableRemoteLogin.Value}">Login</Button>
+        <Label Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Center" >User Options</Label>
+        <Label Grid.Row="9" HorizontalAlignment="Center" >User</Label>
+        <Label Grid.Row="9" Grid.Column="1" HorizontalAlignment="Center" >Password</Label>
+        <TextBox Grid.Row="10" Grid.Column="0"></TextBox>
+        <TextBox Grid.Row="10" Grid.Column="1"></TextBox>
+        <Button Grid.Row="11">Add</Button>
+        <Button Grid.Row="11" Grid.Column="1">Remove</Button>
     </Grid>
 </UserControl>

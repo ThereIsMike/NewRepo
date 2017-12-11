@@ -149,25 +149,24 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BaseCommand.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Data\User.cs" />
     <Compile Include="Converters\ToSelection.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="MainView.xaml.cs">
+    <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainViewModel.cs" />
-    <Compile Include="NavigationViewModel.cs" />
-    <Compile Include="ProductList.cs" />
-    <Compile Include="Status.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\NavigationViewModel.cs" />
+    <Compile Include="Data\Status.cs" />
     <Compile Include="ShoppingContext.cs" />
-    <Compile Include="Item.cs" />
+    <Compile Include="Data\Item.cs" />
     <Compile Include="TrulyObservableCollection.cs" />
-    <Compile Include="UserView.xaml.cs">
+    <Compile Include="Views\UserView.xaml.cs">
       <DependentUpon>UserView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserViewModel.cs" />
-    <Compile Include="ViewModelBase.cs" />
-    <Page Include="MainView.xaml">
+    <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Page Include="Views\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -183,7 +182,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UserView.xaml">
+    <Page Include="Views\UserView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -217,6 +216,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

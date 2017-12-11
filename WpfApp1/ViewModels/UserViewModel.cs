@@ -1,4 +1,5 @@
-﻿using Reactive.Bindings;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,6 +13,8 @@ namespace WpfApp1
     public class UserViewModel
     {
         public IReactiveProperty<string> DbId { get; set; } = new ReactiveProperty<string>();
+
+        public IReactiveProperty<string> ServiceName { get; set; } = new ReactiveProperty<string>();
 
         public IReactiveProperty<string> DbPassword { get; set; } = new ReactiveProperty<string>();
 
@@ -37,21 +40,26 @@ namespace WpfApp1
         {
             Subscriptions();
             _instance = this;
-            isLoaded = true;
+            this.isLoaded = true;
         }
 
         private void Subscriptions()
         {
             this.DbConnection.Subscribe(x =>
             {
-                    EnableRemoteLogin.Value = !x;
+                this.EnableRemoteLogin.Value = !x;
 
+            });
+
+            this.ServiceName.Subscribe(x => {
+                if(x != string.Empty && x != null)
+                    App.MobileService = new MobileServiceClient($"https://{x}.azurewebsites.net");
             });
 
             this.Login.Subscribe(x => {
                 var passwd = x as PasswordBox;
-                Console.WriteLine($"Remote is {EnableRemoteLogin.Value}");
-                Console.WriteLine($"Login as {DbId.Value} and password {passwd.Password}");
+                Console.WriteLine($"Remote is {this.EnableRemoteLogin.Value}");
+                Console.WriteLine($"Login as {this.DbId.Value} and password {passwd.Password}");
                 this.DbPassword.Value = passwd.Password;
 
                 if (true)
@@ -75,7 +83,7 @@ namespace WpfApp1
             SqlConnection myConnection = new SqlConnection();
 
             SqlConnectionStringBuilder myBuilder = new SqlConnectionStringBuilder();
-            myBuilder.UserID = DbId.Value + "@mylearningcurve.database.windows.net";
+            myBuilder.UserID = this.DbId.Value + "@mylearningcurve.database.windows.net";
             myBuilder.Password = pw;
             myBuilder.InitialCatalog = "Shopping";
             myBuilder.DataSource = "tcp:mylearningcurve.database.windows.net,1433";
