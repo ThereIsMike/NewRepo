@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:minHeight="30px"
+    android:minWidth="100px"
+    android:weightSum="90"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <TextView
+        android:text="Washing"
+        android:layout_width="0dp"
+        android:layout_weight="50"
+        android:layout_height="wrap_content"
+        android:id="@+id/TaskName" />
+    <Switch
+        android:layout_weight="20"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/Done" />
+    <Spinner
+        android:layout_weight="20"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/Assigned" />
+</LinearLayout>
