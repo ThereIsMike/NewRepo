@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <EditText
-        android:text="Service Name"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,9 +16,28 @@
         android:id="@+id/RefreshList" />
     <Button
         android:text="Get Items"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:id="@+id/GetItemList" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="150px"
+        android:weightSum="100"
+        android:id="@+id/NewItemField">
+        <EditText
+            android:text=""
+            android:layout_weight="50"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:id="@+id/NewItem" />
+        <Button
+            android:text="Button"
+            android:layout_weight="50"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:id="@+id/AddItem" />
+    </LinearLayout>
     <ListView
         android:minWidth="25px"
         android:minHeight="25px"

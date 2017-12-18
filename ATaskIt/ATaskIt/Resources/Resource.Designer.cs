@@ -60,17 +60,26 @@ namespace ATaskIt
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050006
-			public const int Assigned = 2131034118;
-			
 			// aapt resource value: 0x7f050005
-			public const int Done = 2131034117;
+			public const int AddItem = 2131034117;
+			
+			// aapt resource value: 0x7f050009
+			public const int Assigned = 2131034121;
+			
+			// aapt resource value: 0x7f050008
+			public const int Done = 2131034120;
 			
 			// aapt resource value: 0x7f050002
 			public const int GetItemList = 2131034114;
 			
+			// aapt resource value: 0x7f050006
+			public const int ItemList = 2131034118;
+			
+			// aapt resource value: 0x7f050004
+			public const int NewItem = 2131034116;
+			
 			// aapt resource value: 0x7f050003
-			public const int ItemList = 2131034115;
+			public const int NewItemField = 2131034115;
 			
 			// aapt resource value: 0x7f050001
 			public const int RefreshList = 2131034113;
@@ -78,8 +87,8 @@ namespace ATaskIt
 			// aapt resource value: 0x7f050000
 			public const int ServiceName = 2131034112;
 			
-			// aapt resource value: 0x7f050004
-			public const int TaskName = 2131034116;
+			// aapt resource value: 0x7f050007
+			public const int TaskName = 2131034119;
 			
 			static Id()
 			{
