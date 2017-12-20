@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:id="@+id/NewItem" />
         <Button
-            android:text="Button"
+            android:text="Add"
             android:layout_weight="50"
             android:layout_width="0px"
             android:layout_height="match_parent"

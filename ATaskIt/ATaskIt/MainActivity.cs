@@ -8,6 +8,7 @@ using ATaskIt.Data;
 using Android.Views.InputMethods;
 using Android.Content;
 using System.Collections.Generic;
+using Microsoft.WindowsAzure.MobileServices;
 
 namespace ATaskIt
 {
@@ -62,7 +63,7 @@ namespace ATaskIt
                 {
                     this.tasksOnly.Add(item);
                 }
-                this.myTasks = new TaskElementAdapter(this, this.tasksOnly);
+                this.myTasks = new TaskElementAdapter(this, this.tasksOnly, _item);
                 this.Items.Adapter = this.myTasks;
                 this.newItemField.Visibility = Android.Views.ViewStates.Visible;              
             };
