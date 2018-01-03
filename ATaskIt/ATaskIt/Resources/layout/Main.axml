@@ -3,6 +3,17 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:text="Debug Information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_blue_light"
+        android:id="@+id/msgText" />
+    <Button
+        android:text="Token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/logTokenButton" />
     <EditText
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "486302818728",
+    "firebase_url": "https://elephanttaskit.firebaseio.com",
+    "project_id": "elephanttaskit",
+    "storage_bucket": "elephanttaskit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486302818728:android:d668ea5ba0a9a838",
+        "android_client_info": {
+          "package_name": "com.taskit.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "486302818728-745n5i71hkus6rgiqkrg5dhia87i4q77.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLQkjI21EHw5nPNF-LnXZoC6DtIjVY99E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
