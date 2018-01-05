@@ -174,6 +174,9 @@ namespace ATaskIt
 			// aapt resource value: 0x7f020015
 			public const int googleg_standard_color_18 = 2130837525;
 			
+			// aapt resource value: 0x7f020016
+			public const int ic_stat_ic_notification = 2130837526;
+			
 			static Drawable()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -187,35 +190,35 @@ namespace ATaskIt
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f070010
-			public const int AddItem = 2131165200;
+			// aapt resource value: 0x7f070011
+			public const int AddItem = 2131165201;
+			
+			// aapt resource value: 0x7f070015
+			public const int Assigned = 2131165205;
 			
 			// aapt resource value: 0x7f070014
-			public const int Assigned = 2131165204;
-			
-			// aapt resource value: 0x7f070013
-			public const int Done = 2131165203;
-			
-			// aapt resource value: 0x7f07000d
-			public const int GetItemList = 2131165197;
-			
-			// aapt resource value: 0x7f070011
-			public const int ItemList = 2131165201;
-			
-			// aapt resource value: 0x7f07000f
-			public const int NewItem = 2131165199;
+			public const int Done = 2131165204;
 			
 			// aapt resource value: 0x7f07000e
-			public const int NewItemField = 2131165198;
-			
-			// aapt resource value: 0x7f07000c
-			public const int RefreshList = 2131165196;
-			
-			// aapt resource value: 0x7f07000b
-			public const int ServiceName = 2131165195;
+			public const int GetItemList = 2131165198;
 			
 			// aapt resource value: 0x7f070012
-			public const int TaskName = 2131165202;
+			public const int ItemList = 2131165202;
+			
+			// aapt resource value: 0x7f070010
+			public const int NewItem = 2131165200;
+			
+			// aapt resource value: 0x7f07000f
+			public const int NewItemField = 2131165199;
+			
+			// aapt resource value: 0x7f07000d
+			public const int RefreshList = 2131165197;
+			
+			// aapt resource value: 0x7f07000c
+			public const int ServiceName = 2131165196;
+			
+			// aapt resource value: 0x7f070013
+			public const int TaskName = 2131165203;
 			
 			// aapt resource value: 0x7f070000
 			public const int adjust_height = 2131165184;
@@ -246,6 +249,9 @@ namespace ATaskIt
 			
 			// aapt resource value: 0x7f070004
 			public const int standard = 2131165188;
+			
+			// aapt resource value: 0x7f07000b
+			public const int subscribeButton = 2131165195;
 			
 			// aapt resource value: 0x7f070005
 			public const int wide = 2131165189;

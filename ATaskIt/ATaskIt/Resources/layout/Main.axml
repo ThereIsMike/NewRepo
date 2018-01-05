@@ -11,9 +11,16 @@
         android:id="@+id/msgText" />
     <Button
         android:text="Token"
+        android:background="@android:color/holo_blue_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/logTokenButton" />
+    <Button
+        android:background="@android:color/holo_blue_bright"
+        android:id="@+id/subscribeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Subscribe to Notifications" />
     <EditText
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -29,7 +36,8 @@
         android:text="Get Items"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:id="@+id/GetItemList" />
+        android:id="@+id/GetItemList"
+        android:background="@android:color/holo_purple" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -47,7 +55,8 @@
             android:layout_weight="50"
             android:layout_width="0px"
             android:layout_height="match_parent"
-            android:id="@+id/AddItem" />
+            android:id="@+id/AddItem"
+            android:background="@android:color/holo_purple" />
     </LinearLayout>
     <ListView
         android:minWidth="25px"

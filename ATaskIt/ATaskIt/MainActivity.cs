@@ -30,6 +30,7 @@ namespace ATaskIt
         private LinearLayout newItemField;
         private Button refreshList;
         private TextView serviceName;
+        private Button subscribeButton;
         private List<Item> tasksOnly = new List<Item>();
 
         public bool IsPlayServicesAvailable()
@@ -71,6 +72,7 @@ namespace ATaskIt
             this.addItem = FindViewById<Button>(Resource.Id.AddItem);
             this.msgText = FindViewById<TextView>(Resource.Id.msgText);
             this.logTokenButton = FindViewById<Button>(Resource.Id.logTokenButton);
+            this.subscribeButton = FindViewById<Button>(Resource.Id.subscribeButton);
 
             if (this.Intent.Extras != null)
             {
@@ -81,6 +83,12 @@ namespace ATaskIt
                 }
             }
             IsPlayServicesAvailable();
+
+            this.subscribeButton.Click += delegate
+            {
+                FirebaseMessaging.Instance.SubscribeToTopic("tasks");
+                Log.Debug("MainActivity", "Subscribed to remote notifications");
+            };
 
             this.logTokenButton.Click += (o, e) =>
             {
