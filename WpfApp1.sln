@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{344CDA4B-3D81-4D9C-9F98-A982908D97DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "taskitnowService", "taskitnowService\taskitnowService.csproj", "{209FA716-A7AD-4095-BD70-C8710FC66FA7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATaskIt", "ATaskIt\ATaskIt\ATaskIt.csproj", "{CFA1C93D-8370-4119-B7B5-3633732915E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToShare", "ToShare\ToShare.csproj", "{B9D43D08-6C31-47E6-AB6B-D832D203FF57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TChek", "TChek\TChek.csproj", "{9FA35F30-E665-4ADC-8CE5-B6A1968249C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,14 @@ Global
 		{CFA1C93D-8370-4119-B7B5-3633732915E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFA1C93D-8370-4119-B7B5-3633732915E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CFA1C93D-8370-4119-B7B5-3633732915E9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B9D43D08-6C31-47E6-AB6B-D832D203FF57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9D43D08-6C31-47E6-AB6B-D832D203FF57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9D43D08-6C31-47E6-AB6B-D832D203FF57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9D43D08-6C31-47E6-AB6B-D832D203FF57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FA35F30-E665-4ADC-8CE5-B6A1968249C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FA35F30-E665-4ADC-8CE5-B6A1968249C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FA35F30-E665-4ADC-8CE5-B6A1968249C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FA35F30-E665-4ADC-8CE5-B6A1968249C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

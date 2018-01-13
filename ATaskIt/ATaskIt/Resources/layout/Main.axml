@@ -10,28 +10,17 @@
         android:textColor="@android:color/holo_blue_light"
         android:id="@+id/msgText" />
     <Button
-        android:text="Token"
+        android:text="Register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@android:color/holo_blue_light"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/logTokenButton" />
+        android:id="@+id/register" />
     <Button
-        android:background="@android:color/holo_blue_bright"
-        android:id="@+id/subscribeButton"
+        android:text="Deregister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Subscribe to Notifications" />
-    <EditText
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ServiceName" />
-    <Button
-        android:text="Get connection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/RefreshList" />
+        android:background="@android:color/holo_blue_light"
+        android:id="@+id/deregister" />
     <Button
         android:text="Get Items"
         android:layout_height="wrap_content"
@@ -51,7 +40,7 @@
             android:layout_height="match_parent"
             android:id="@+id/NewItem" />
         <Button
-            android:text="Add"
+            android:text="+"
             android:layout_weight="50"
             android:layout_width="0px"
             android:layout_height="match_parent"

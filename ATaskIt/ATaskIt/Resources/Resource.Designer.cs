@@ -175,7 +175,13 @@ namespace ATaskIt
 			public const int googleg_standard_color_18 = 2130837525;
 			
 			// aapt resource value: 0x7f020016
-			public const int ic_stat_ic_notification = 2130837526;
+			public const int ic_launcher = 2130837526;
+			
+			// aapt resource value: 0x7f020017
+			public const int ic_stat_ic_notification = 2130837527;
+			
+			// aapt resource value: 0x7f020018
+			public const int icon = 2130837528;
 			
 			static Drawable()
 			{
@@ -190,35 +196,29 @@ namespace ATaskIt
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f070011
-			public const int AddItem = 2131165201;
-			
-			// aapt resource value: 0x7f070015
-			public const int Assigned = 2131165205;
-			
-			// aapt resource value: 0x7f070014
-			public const int Done = 2131165204;
-			
-			// aapt resource value: 0x7f07000e
-			public const int GetItemList = 2131165198;
-			
-			// aapt resource value: 0x7f070012
-			public const int ItemList = 2131165202;
-			
-			// aapt resource value: 0x7f070010
-			public const int NewItem = 2131165200;
-			
 			// aapt resource value: 0x7f07000f
-			public const int NewItemField = 2131165199;
-			
-			// aapt resource value: 0x7f07000d
-			public const int RefreshList = 2131165197;
-			
-			// aapt resource value: 0x7f07000c
-			public const int ServiceName = 2131165196;
+			public const int AddItem = 2131165199;
 			
 			// aapt resource value: 0x7f070013
-			public const int TaskName = 2131165203;
+			public const int Assigned = 2131165203;
+			
+			// aapt resource value: 0x7f070012
+			public const int Done = 2131165202;
+			
+			// aapt resource value: 0x7f07000c
+			public const int GetItemList = 2131165196;
+			
+			// aapt resource value: 0x7f070010
+			public const int ItemList = 2131165200;
+			
+			// aapt resource value: 0x7f07000e
+			public const int NewItem = 2131165198;
+			
+			// aapt resource value: 0x7f07000d
+			public const int NewItemField = 2131165197;
+			
+			// aapt resource value: 0x7f070011
+			public const int TaskName = 2131165201;
 			
 			// aapt resource value: 0x7f070000
 			public const int adjust_height = 2131165184;
@@ -232,14 +232,14 @@ namespace ATaskIt
 			// aapt resource value: 0x7f070007
 			public const int dark = 2131165191;
 			
+			// aapt resource value: 0x7f07000b
+			public const int deregister = 2131165195;
+			
 			// aapt resource value: 0x7f070003
 			public const int icon_only = 2131165187;
 			
 			// aapt resource value: 0x7f070008
 			public const int light = 2131165192;
-			
-			// aapt resource value: 0x7f07000a
-			public const int logTokenButton = 2131165194;
 			
 			// aapt resource value: 0x7f070009
 			public const int msgText = 2131165193;
@@ -247,11 +247,11 @@ namespace ATaskIt
 			// aapt resource value: 0x7f070002
 			public const int none = 2131165186;
 			
+			// aapt resource value: 0x7f07000a
+			public const int register = 2131165194;
+			
 			// aapt resource value: 0x7f070004
 			public const int standard = 2131165188;
-			
-			// aapt resource value: 0x7f07000b
-			public const int subscribeButton = 2131165195;
 			
 			// aapt resource value: 0x7f070005
 			public const int wide = 2131165189;
@@ -304,8 +304,8 @@ namespace ATaskIt
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f050018
-			public const int app_name = 2131034136;
+			// aapt resource value: 0x7f050011
+			public const int app_name = 2131034129;
 			
 			// aapt resource value: 0x7f050000
 			public const int common_google_play_services_enable_button = 2131034112;
@@ -358,26 +358,26 @@ namespace ATaskIt
 			// aapt resource value: 0x7f05000f
 			public const int common_signin_button_text_long = 2131034127;
 			
-			// aapt resource value: 0x7f050013
-			public const int default_web_client_id = 2131034131;
-			
 			// aapt resource value: 0x7f050014
-			public const int firebase_database_url = 2131034132;
-			
-			// aapt resource value: 0x7f050011
-			public const int gcm_defaultSenderId = 2131034129;
+			public const int default_web_client_id = 2131034132;
 			
 			// aapt resource value: 0x7f050015
-			public const int google_api_key = 2131034133;
+			public const int firebase_database_url = 2131034133;
 			
 			// aapt resource value: 0x7f050012
-			public const int google_app_id = 2131034130;
+			public const int gcm_defaultSenderId = 2131034130;
 			
 			// aapt resource value: 0x7f050016
-			public const int google_crash_reporting_api_key = 2131034134;
+			public const int google_api_key = 2131034134;
+			
+			// aapt resource value: 0x7f050013
+			public const int google_app_id = 2131034131;
 			
 			// aapt resource value: 0x7f050017
-			public const int google_storage_bucket = 2131034135;
+			public const int google_crash_reporting_api_key = 2131034135;
+			
+			// aapt resource value: 0x7f050018
+			public const int google_storage_bucket = 2131034136;
 			
 			static String()
 			{

@@ -13,6 +13,8 @@ using System;
 using Firebase.Messaging;
 using Firebase.Iid;
 using Android.Util;
+using System.Threading.Tasks;
+using ToShare;
 
 namespace ATaskIt
 {
@@ -20,6 +22,7 @@ namespace ATaskIt
     public class MainActivity : Activity
     {
         private Button addItem;
+        private Button deregister;
         private Button getItemList;
         private ListView Items;
         private Button logTokenButton;
@@ -28,10 +31,11 @@ namespace ATaskIt
         private TaskElementAdapter myTasks;
         private TextView newItem;
         private LinearLayout newItemField;
-        private Button refreshList;
-        private TextView serviceName;
+        private Button register;
         private Button subscribeButton;
         private List<Item> tasksOnly = new List<Item>();
+
+        public static Context Instance { get; private set; }
 
         public bool IsPlayServicesAvailable()
         {
@@ -57,6 +61,7 @@ namespace ATaskIt
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            Instance = this;
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
@@ -64,15 +69,13 @@ namespace ATaskIt
             InputMethodManager inputManager = (InputMethodManager)this.GetSystemService(Context.InputMethodService);
 
             this.newItemField = FindViewById<LinearLayout>(Resource.Id.NewItemField);
-            this.serviceName = FindViewById<TextView>(Resource.Id.ServiceName);
             this.newItem = FindViewById<TextView>(Resource.Id.NewItem);
             this.Items = FindViewById<ListView>(Resource.Id.ItemList);
-            this.refreshList = FindViewById<Button>(Resource.Id.RefreshList);
             this.getItemList = FindViewById<Button>(Resource.Id.GetItemList);
             this.addItem = FindViewById<Button>(Resource.Id.AddItem);
             this.msgText = FindViewById<TextView>(Resource.Id.msgText);
-            this.logTokenButton = FindViewById<Button>(Resource.Id.logTokenButton);
-            this.subscribeButton = FindViewById<Button>(Resource.Id.subscribeButton);
+            this.register = FindViewById<Button>(Resource.Id.register);
+            this.deregister = FindViewById<Button>(Resource.Id.deregister);
 
             if (this.Intent.Extras != null)
             {
@@ -84,31 +87,11 @@ namespace ATaskIt
             }
             IsPlayServicesAvailable();
 
-            this.subscribeButton.Click += delegate
-            {
-                FirebaseMessaging.Instance.SubscribeToTopic("tasks");
-                Log.Debug("MainActivity", "Subscribed to remote notifications");
-            };
-
-            this.logTokenButton.Click += (o, e) =>
-            {
-                var token = FirebaseInstanceId.Instance.Token;
-                Log.Debug("MainAvtivity", "InstanceID token: " + token);
-            };
-
             this.newItemField.Visibility = Android.Views.ViewStates.Gone;
-
-            this.refreshList.Click += (o, e) =>
-            {
-                this.MobileService = new MobileServiceClient(
-                $"https://{this.serviceName.Text}.azurewebsites.net");
-                inputManager.HideSoftInputFromWindow(this.refreshList.WindowToken, 0);
-                this.serviceName.Visibility = Android.Views.ViewStates.Gone;
-                this.refreshList.Visibility = Android.Views.ViewStates.Gone;
-            };
 
             this.getItemList.Click += async (o, e) =>
             {
+                this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
                 IMobileServiceTable<Item> _item = this.MobileService.GetTable<Item>();
                 MobileServiceCollection<Item, Item> _productsenum = await _item
                         .Where(u => u.Name != string.Empty)
@@ -125,9 +108,48 @@ namespace ATaskIt
 
             this.addItem.Click += async (o, e) =>
             {
-                IMobileServiceTable<Item> _item = this.MobileService.GetTable<Item>();
-                await _item.InsertAsync(new Item { Name = this.newItem.Text });
-                inputManager.HideSoftInputFromWindow(this.refreshList.WindowToken, 0);
+                if (this.newItem.Text != "")
+                {
+                    this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
+                    IMobileServiceTable<Item> _item = this.MobileService.GetTable<Item>();
+                    await _item.InsertAsync(new Item { Name = this.newItem.Text });
+                    this.newItem.Text = "";
+                }
+
+                inputManager.HideSoftInputFromWindow(this.newItem.WindowToken, 0);
+            };
+            this.register.Click += async (o, e) =>
+            {
+                await Task.Run(async () =>
+                 {
+                     try
+                     {
+                         var result = await NotificationRegistrationService.Instance.RegisterDeviceAsync();
+                         if (!result)
+                         {
+                             System.Diagnostics.Debug.WriteLine("Error registering with notification hub");
+                         }
+                     }
+                     catch (System.Exception ex)
+                     {
+                         System.Diagnostics.Debug.WriteLine($"[PushNotificationError]: Device registration failed with error {ex.Message}");
+                     }
+                 });
+            };
+            this.deregister.Click += async (o, e) =>
+            {
+                await Task.Run(async () =>
+                 {
+                     try
+                     {
+                         await NotificationRegistrationService.Instance.DeregisterDeviceAsync();
+                         System.Diagnostics.Debug.WriteLine("Should be deregistered");
+                     }
+                     catch (System.Exception ex)
+                     {
+                         System.Diagnostics.Debug.WriteLine($"[PushNotificationError]: Device deregistration failed with error {ex.Message}");
+                     }
+                 });
             };
         }
     }

@@ -14,22 +14,17 @@ using Microsoft.WindowsAzure.MobileServices;
 
 namespace ATaskIt.Data
 {
-    class TaskElementAdapter : BaseAdapter<Item>
+    internal class TaskElementAdapter : BaseAdapter<Item>
     {
-        private List<Item> myItemList;
         private Context myContext;
-        IMobileServiceTable<Item> myItemTable;
+        private List<Item> myItemList;
+        private IMobileServiceTable<Item> myItemTable;
 
         public TaskElementAdapter(Context context, List<Item> list, IMobileServiceTable<Item> table)
         {
             this.myItemList = list;
             this.myContext = context;
             this.myItemTable = table;
-
-        }
-        public override Item this[int position]
-        {
-            get { return this.myItemList[position]; }
         }
 
         public override int Count
@@ -37,19 +32,23 @@ namespace ATaskIt.Data
             get { return this.myItemList.Count(); }
         }
 
+        public override Item this[int position]
+        {
+            get { return this.myItemList[position]; }
+        }
+
         public override long GetItemId(int position)
         {
             return position;
         }
+
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             View row = convertView;
-            if(row == null)
+            if (row == null)
             {
                 row = LayoutInflater.From(this.myContext).Inflate(Resource.Layout.TaskElement, null, false);
             }
-
-
 
             TextView taskName = row.FindViewById<TextView>(Resource.Id.TaskName);
             taskName.Text = this.myItemList[position].Name;
@@ -59,7 +58,7 @@ namespace ATaskIt.Data
             done.Checked = false;
 
             Spinner assigned = row.FindViewById<Spinner>(Resource.Id.Assigned);
-            List<string> users = new List<string> { "Anna", "Michal" }; 
+            List<string> users = new List<string> { "Anna", "Michal" };
             var adapter = new ArrayAdapter(assigned.Context, Android.Resource.Layout.SimpleSpinnerItem, users);
 
             adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
@@ -71,7 +70,6 @@ namespace ATaskIt.Data
         private async void TaskName_LongClick(object sender, View.LongClickEventArgs e)
         {
             var ItemToDelete = (sender as TextView).Text;
-            Console.WriteLine($"Delete {ItemToDelete}");
             var items = await this.myItemTable
                                 .Where(u => u.Name == ItemToDelete)
                                 .ToCollectionAsync();
