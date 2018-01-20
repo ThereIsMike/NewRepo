@@ -43,10 +43,8 @@ namespace taskitnowService.Controllers
             {
                 // Send the push notification and log the results.
 
-                System.Diagnostics.Trace.WriteLine($"Tags: {string.Join(" || ", pushRequest.Tags)}");
-
                 // Send the push notification and log the results.
-                var result = await this.Hub.SendTemplateNotificationAsync(templateParams, string.Join(" || ", pushRequest.Tags));
+                var result = await this.Hub.SendTemplateNotificationAsync(templateParams, "");
 
                 // Write the success result to the logs.
                 System.Diagnostics.Trace.WriteLine($"Outcome: {result.State.ToString()}");

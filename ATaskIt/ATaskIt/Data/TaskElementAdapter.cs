@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -18,13 +18,20 @@ namespace ATaskIt.Data
     {
         private Context myContext;
         private List<Item> myItemList;
+        private MobileServiceCollection<Data.Status, Data.Status> myItemStatus;
+        private IMobileServiceTable<Status> myItemStatusTable;
         private IMobileServiceTable<Item> myItemTable;
 
-        public TaskElementAdapter(Context context, List<Item> list, IMobileServiceTable<Item> table)
+        public TaskElementAdapter(Context context, List<Item> list,
+            IMobileServiceTable<Item> table,
+            IMobileServiceTable<Status> statustable,
+            MobileServiceCollection<Data.Status, Data.Status> status)
         {
             this.myItemList = list;
             this.myContext = context;
             this.myItemTable = table;
+            this.myItemStatusTable = statustable;
+            this.myItemStatus = status;
         }
 
         public override int Count
@@ -55,7 +62,13 @@ namespace ATaskIt.Data
             taskName.LongClick += this.TaskName_LongClick;
 
             Switch done = row.FindViewById<Switch>(Resource.Id.Done);
-            done.Checked = false;
+            var status = this.myItemStatus
+                            .Where(u => u.Name == taskName.Text);
+            if (status.Count() > 0)
+                done.Checked = status.FirstOrDefault().Executed;
+            done.Tag = this.myItemList[position].Name;
+
+            done.CheckedChange += this.Done_Checked;
 
             Spinner assigned = row.FindViewById<Spinner>(Resource.Id.Assigned);
             List<string> users = new List<string> { "Anna", "Michal" };
@@ -65,6 +78,25 @@ namespace ATaskIt.Data
             assigned.Adapter = adapter;
 
             return row;
+        }
+
+        private async void Done_Checked(object sender, CompoundButton.CheckedChangeEventArgs e)
+        {
+            var checked_name = (sender as Switch).Tag.ToString();
+            Console.WriteLine("Checked: " + checked_name);
+            var status = await this.myItemStatusTable
+                                  .Where(u => u.Name == checked_name)
+                                  .ToCollectionAsync().ConfigureAwait(false);
+
+            if (status.Count > 0)
+            {
+                await this.myItemStatusTable.DeleteAsync(status.FirstOrDefault());
+                status.FirstOrDefault().Executed = e.IsChecked;
+                await this.myItemStatusTable.InsertAsync(status.FirstOrDefault());
+            }
+            else
+                await this.myItemStatusTable.InsertAsync(new Status { Name = checked_name, Executed = e.IsChecked });
+            Console.WriteLine(checked_name + "is " + e.IsChecked);
         }
 
         private async void TaskName_LongClick(object sender, View.LongClickEventArgs e)

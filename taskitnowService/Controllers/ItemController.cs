@@ -11,6 +11,11 @@ using taskitnowService.DataObjects;
 using taskitnowService.Helpers;
 using taskitnowService.Models;
 using System.Reactive.Linq;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using ToShare;
+using Newtonsoft.Json;
+using System.Net;
 
 namespace taskitnowService.Controllers
 {
@@ -56,9 +61,10 @@ namespace taskitnowService.Controllers
             this.Cancel = Observable
              .Timer(TimeSpan.FromSeconds(60))
              .Subscribe(
-             async x =>
+              x =>
              {
-                 await SendTemplateNotificationAsync(string.Format("Items added")).ConfigureAwait(false);
+                 //await SendTemplateNotificationAsync(string.Format("Items added")).ConfigureAwait(false);
+                 SendMessage("Items added");
                  this.CountNewItems = 0;
              });
 
@@ -73,9 +79,40 @@ namespace taskitnowService.Controllers
             this.DomainManager = new EntityDomainManager<Item>(context, this.Request);
         }
 
+        /// <summary>
+        /// Sends the message. Work in the background and foreground.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
+        private bool SendMessage(string item)
+        {
+            var data = new PushRequest();
+            data.Text = item.ToString();
+
+            var url = Settings.API_URL;
+
+            using (var client = new HttpClient())
+            {
+                Task.WaitAll(client.PostAsync(url,
+                    new StringContent(JsonConvert.SerializeObject(data), System.Text.Encoding.UTF8, "application/json"))
+                        .ContinueWith(response =>
+                        {
+                            Console.WriteLine(response.Status);
+                            Console.WriteLine("Message sent: check the client device notification tray.");
+                            return response.Result.IsSuccessStatusCode;
+                        }));
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Sends the template notification asynchronous. They work only in the foreground
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <returns></returns>
         private async Task SendTemplateNotificationAsync(string item)
         {
-            NotificationHubClient hub = NotificationHubClient.CreateClientFromConnectionString(Settings.HUB_KEY, Settings.HUB_NAME);
+            NotificationHubClient hub = NotificationHubClient.CreateClientFromConnectionString(Settings.HUB_ENDPOINT, Settings.HUB_NAME);
             Dictionary<string, string> templateParams = new Dictionary<string, string>();
             templateParams["messageParam"] = item;
             await hub.SendTemplateNotificationAsync(templateParams, "");
