@@ -3,39 +3,33 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <include
-      android:id="@+id/toolbar"
-      layout="@layout/toolbar" />
-  <TextView
-      android:text="Debug Information"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:textColor="@android:color/holo_blue_light"
-      android:id="@+id/msgText" />
-  <LinearLayout
-      android:orientation="horizontal"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:weightSum="100"
-      android:id="@+id/NewItemField">
-    <EditText
-        android:text=""
-        android:layout_weight="50"
-        android:layout_width="0px"
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100"
+        android:id="@+id/NewItemField">
+        <EditText
+            android:text=""
+            android:layout_weight="50"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:id="@+id/NewItem" />
+        <ImageButton
+            android:src="@android:drawable/ic_input_add"
+            android:layout_weight="50"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:id="@+id/AddItem"
+            android:background="@android:color/holo_blue_light" />
+    </LinearLayout>
+    <ListView
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/NewItem" />
-    <ImageButton
-        android:src="@android:drawable/ic_input_add"
-        android:layout_weight="50"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:id="@+id/AddItem"
-        android:background="@android:color/holo_blue_light" />
-  </LinearLayout>
-  <ListView
-      android:minWidth="25px"
-      android:minHeight="25px"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:id="@+id/ItemList" />
+        android:id="@+id/ItemList" />
 </LinearLayout>

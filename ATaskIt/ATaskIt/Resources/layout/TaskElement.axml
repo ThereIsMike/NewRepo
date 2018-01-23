@@ -6,20 +6,20 @@
     android:weightSum="90"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <TextView
-        android:text="Washing"
-        android:layout_width="0dp"
-        android:layout_weight="50"
-        android:layout_height="wrap_content"
-        android:id="@+id/TaskName" />
-    <Switch
-        android:layout_weight="20"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/Done" />
-    <Spinner
-        android:layout_weight="20"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/Assigned" />
+  <TextView
+      android:text="Washing"
+      android:layout_width="0dp"
+      android:layout_weight="40"
+      android:layout_height="wrap_content"
+      android:id="@+id/TaskName" />
+  <CheckBox
+      android:layout_weight="10"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:id="@+id/Done" />
+  <Spinner
+      android:layout_weight="40"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:id="@+id/Assigned" />
 </LinearLayout>

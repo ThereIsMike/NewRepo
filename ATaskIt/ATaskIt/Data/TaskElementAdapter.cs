@@ -16,7 +16,9 @@ namespace ATaskIt.Data
 {
     internal class TaskElementAdapter : BaseAdapter<Item>
     {
+        //private Switch done;
         private Context myContext;
+
         private List<Item> myItemList;
         private MobileServiceCollection<Data.Status, Data.Status> myItemStatus;
         private IMobileServiceTable<Status> myItemStatusTable;
@@ -36,7 +38,7 @@ namespace ATaskIt.Data
 
         public override int Count
         {
-            get { return this.myItemList.Count(); }
+            get { return this.myItemList.Count; }
         }
 
         public override Item this[int position]
@@ -57,59 +59,97 @@ namespace ATaskIt.Data
                 row = LayoutInflater.From(this.myContext).Inflate(Resource.Layout.TaskElement, null, false);
             }
 
-            TextView taskName = row.FindViewById<TextView>(Resource.Id.TaskName);
+            var taskName = row.FindViewById<TextView>(Resource.Id.TaskName);
             taskName.Text = this.myItemList[position].Name;
-            taskName.LongClick += this.TaskName_LongClick;
 
-            Switch done = row.FindViewById<Switch>(Resource.Id.Done);
-            var status = this.myItemStatus
-                            .Where(u => u.Name == taskName.Text);
-            if (status.Count() > 0)
-                done.Checked = status.FirstOrDefault().Executed;
+            var done = row.FindViewById<CheckBox>(Resource.Id.Done);
+            try
+            {
+                var status = this.myItemStatus
+                                .Where(u => u.Name == taskName.Text);
+                if (status.Any())
+                    done.Checked = status.FirstOrDefault().Executed;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             done.Tag = this.myItemList[position].Name;
-
+            done.CheckedChange -= this.Done_Checked;
             done.CheckedChange += this.Done_Checked;
 
-            Spinner assigned = row.FindViewById<Spinner>(Resource.Id.Assigned);
-            List<string> users = new List<string> { "Anna", "Michal" };
-            var adapter = new ArrayAdapter(assigned.Context, Android.Resource.Layout.SimpleSpinnerItem, users);
+            var assigned = row.FindViewById<Spinner>(Resource.Id.Assigned);
+            assigned.Tag = this.myItemList[position].Name;
 
+            var users = new List<string> { "None", "Anna", "Michal" };
+            assigned.ItemSelected -= this.User_Assigned;
+            assigned.ItemSelected += this.User_Assigned;
+            var adapter = new ArrayAdapter(this.myContext, Android.Resource.Layout.SimpleSpinnerItem, users);
             adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             assigned.Adapter = adapter;
+
+            try
+            {
+                var status = this.myItemStatus
+                                .Where(u => u.Name == taskName.Text);
+                if (status.Any())
+                {
+                    var sss = users.Select((x, n) =>
+                    {
+                        if (x == status.FirstOrDefault().Selected)
+                            return n;
+                        return 0;
+                    }).Where(g => g > 0).FirstOrDefault();
+                    assigned.SetSelection(sss, false);
+                    Console.WriteLine(assigned.Tag + " belongs to  " + sss);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             return row;
         }
 
-        private async void Done_Checked(object sender, CompoundButton.CheckedChangeEventArgs e)
+        private async void Done_Checked(object sender, EventArgs e)
         {
-            var checked_name = (sender as Switch).Tag.ToString();
-            Console.WriteLine("Checked: " + checked_name);
+            var checked_name = (sender as CheckBox).Tag.ToString();
+            var blocker = new Object();
             var status = await this.myItemStatusTable
-                                  .Where(u => u.Name == checked_name)
-                                  .ToCollectionAsync().ConfigureAwait(false);
-
+                                    .Where(u => u.Name == checked_name)
+                                    .ToCollectionAsync().ConfigureAwait(false);
             if (status.Count > 0)
             {
                 await this.myItemStatusTable.DeleteAsync(status.FirstOrDefault());
-                status.FirstOrDefault().Executed = e.IsChecked;
+                status.FirstOrDefault().Executed = (sender as CheckBox).Checked;
                 await this.myItemStatusTable.InsertAsync(status.FirstOrDefault());
             }
             else
-                await this.myItemStatusTable.InsertAsync(new Status { Name = checked_name, Executed = e.IsChecked });
-            Console.WriteLine(checked_name + "is " + e.IsChecked);
+                await this.myItemStatusTable.InsertAsync(new Status { Name = checked_name, Executed = (sender as CheckBox).Checked });
+
+            Console.WriteLine(checked_name + " is " + (sender as CheckBox).Checked);
         }
 
-        private async void TaskName_LongClick(object sender, View.LongClickEventArgs e)
+        private async void User_Assigned(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            var ItemToDelete = (sender as TextView).Text;
-            var items = await this.myItemTable
-                                .Where(u => u.Name == ItemToDelete)
-                                .ToCollectionAsync();
-            if (items.Count > 0)
+            if (sender != null)
             {
-                var find = await this.myItemTable.LookupAsync(items.FirstOrDefault().Id);
-                await this.myItemTable.DeleteAsync(find);
-                (sender as TextView).SetBackgroundColor(Color.LightCoral);
+                var selected_product = (sender as Spinner).Tag.ToString();
+                var selected_user = (sender as Spinner).SelectedItem.ToString();
+                var status = await this.myItemStatusTable
+                                        .Where(u => u.Name == selected_product)
+                                        .ToCollectionAsync().ConfigureAwait(false);
+                if (status.Count > 0)
+                {
+                    await this.myItemStatusTable.DeleteAsync(status.FirstOrDefault());
+                    status.FirstOrDefault().Selected = selected_user;
+                    await this.myItemStatusTable.InsertAsync(status.FirstOrDefault());
+                }
+                else
+                    await this.myItemStatusTable.InsertAsync(new Status { Name = selected_product, Selected = selected_user });
+
+                Console.WriteLine(selected_user + " assigned to " + selected_product);
             }
         }
     }

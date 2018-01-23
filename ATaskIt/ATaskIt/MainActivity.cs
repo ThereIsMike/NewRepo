@@ -23,31 +23,51 @@ namespace ATaskIt
     public class MainActivity : Activity
     {
         private ImageButton addItem;
-        private Button deregister;
-        private Button getItemList;
         private ListView Items;
-        private Button logTokenButton;
         private MobileServiceClient MobileService;
-        private TextView msgText;
         private TaskElementAdapter myTasks;
         private TextView newItem;
         private LinearLayout newItemField;
-        private Button register;
-        private Button subscribeButton;
         private List<Item> tasksOnly = new List<Item>();
 
         public static Context Instance { get; private set; }
 
+        public async Task<bool> DeleteExecuted()
+        {
+            var _item = this.MobileService.GetTable<Item>();
+            var _status = this.MobileService.GetTable<Data.Status>();
+
+            var _statussenum = await _status
+                   .Where(u => u.Executed)
+                   .ToCollectionAsync();
+
+            var _productsenum = await _item
+            .Where(u => u.Name != string.Empty)
+            .ToCollectionAsync();
+
+            foreach (var item in _productsenum)
+            {
+                var itemstodelete = _statussenum.Where(i => i.Name == item.Name).FirstOrDefault();
+                if (itemstodelete != null)
+                {
+                    await _item.DeleteAsync(item);
+                    await _status.DeleteAsync(itemstodelete);
+                }
+            }
+
+            return true;
+        }
+
         public async Task<bool> GetItemsAndDisplayAsync()
         {
             this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
-            IMobileServiceTable<Item> _item = this.MobileService.GetTable<Item>();
-            IMobileServiceTable<Data.Status> _status = this.MobileService.GetTable<Data.Status>();
+            var _item = this.MobileService.GetTable<Item>();
+            var _status = this.MobileService.GetTable<Data.Status>();
 
-            MobileServiceCollection<Item, Item> _productsenum = await _item
+            var _productsenum = await _item
                     .Where(u => u.Name != string.Empty)
                     .ToCollectionAsync();
-            MobileServiceCollection<Data.Status, Data.Status> _statussenum = await _status
+            var _statussenum = await _status
                    .Where(u => u.Name != string.Empty)
                    .ToCollectionAsync();
             this.tasksOnly.Clear();
@@ -62,27 +82,6 @@ namespace ATaskIt
             return true;
         }
 
-        public bool IsPlayServicesAvailable()
-        {
-            int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);
-            if (resultCode != ConnectionResult.Success)
-            {
-                if (GoogleApiAvailability.Instance.IsUserResolvableError(resultCode))
-                    this.msgText.Text = GoogleApiAvailability.Instance.GetErrorString(resultCode);
-                else
-                {
-                    this.msgText.Text = "This device is not supported";
-                    Finish();
-                }
-                return false;
-            }
-            else
-            {
-                this.msgText.Text = "Google Play Services is available.";
-                return true;
-            }
-        }
-
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             this.MenuInflater.Inflate(Resource.Menu.top_menus, menu);
@@ -91,7 +90,7 @@ namespace ATaskIt
 
         public override bool OnNavigateUp()
         {
-            this.msgText.Text = "Navigated up";
+            RunOnUiThread(async () => await GetItemsAndDisplayAsync());
             return base.OnNavigateUp();
         }
 
@@ -104,8 +103,10 @@ namespace ATaskIt
                     return true;
 
                 case "Delete":
-                    Toast.MakeText(this, "Action selected: " + item.TitleFormatted,
+                    Toast.MakeText(this, "Deleting... ",
                     ToastLength.Short).Show();
+                    var deleting = Task.Run(async () => await this.DeleteExecuted());
+                    deleting.ContinueWith(x => RunOnUiThread(async () => await GetItemsAndDisplayAsync()));
                     return true;
 
                 case "Preferences":
@@ -163,26 +164,17 @@ namespace ATaskIt
             SetActionBar(toolbar);
             this.ActionBar.Title = "Task It";
 
-            InputMethodManager inputManager = (InputMethodManager)this.GetSystemService(Context.InputMethodService);
+            var inputManager = (InputMethodManager)this.GetSystemService(Context.InputMethodService);
 
             this.newItemField = FindViewById<LinearLayout>(Resource.Id.NewItemField);
             this.newItem = FindViewById<TextView>(Resource.Id.NewItem);
             this.Items = FindViewById<ListView>(Resource.Id.ItemList);
             this.addItem = FindViewById<ImageButton>(Resource.Id.AddItem);
-            this.msgText = FindViewById<TextView>(Resource.Id.msgText);
 
             if (this.Intent.Extras != null)
             {
                 RunOnUiThread(async () => await GetItemsAndDisplayAsync());
-                this.msgText.Text = "From Notification";
             }
-
-            //IsPlayServicesAvailable();
-
-            this.Items.ItemSelected += async (o, e) =>
-            {
-                //await GetItemsAndDisplayAsync();
-            };
             this.newItemField.Visibility = Android.Views.ViewStates.Gone;
 
             this.addItem.Click += async (o, e) =>
@@ -190,13 +182,15 @@ namespace ATaskIt
                 if (this.newItem.Text != "")
                 {
                     this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
-                    IMobileServiceTable<Item> _item = this.MobileService.GetTable<Item>();
+                    var _item = this.MobileService.GetTable<Item>();
                     await _item.InsertAsync(new Item { Name = this.newItem.Text });
                     this.newItem.Text = "";
                 }
 
                 inputManager.HideSoftInputFromWindow(this.newItem.WindowToken, 0);
             };
+
+            RunOnUiThread(async () => await GetItemsAndDisplayAsync());
         }
     }
 }

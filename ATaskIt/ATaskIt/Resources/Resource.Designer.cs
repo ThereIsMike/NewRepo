@@ -196,26 +196,26 @@ namespace ATaskIt
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0a000d
-			public const int AddItem = 2131361805;
-			
-			// aapt resource value: 0x7f0a0011
-			public const int Assigned = 2131361809;
+			// aapt resource value: 0x7f0a000c
+			public const int AddItem = 2131361804;
 			
 			// aapt resource value: 0x7f0a0010
-			public const int Done = 2131361808;
-			
-			// aapt resource value: 0x7f0a000e
-			public const int ItemList = 2131361806;
-			
-			// aapt resource value: 0x7f0a000c
-			public const int NewItem = 2131361804;
-			
-			// aapt resource value: 0x7f0a000b
-			public const int NewItemField = 2131361803;
+			public const int Assigned = 2131361808;
 			
 			// aapt resource value: 0x7f0a000f
-			public const int TaskName = 2131361807;
+			public const int Done = 2131361807;
+			
+			// aapt resource value: 0x7f0a000d
+			public const int ItemList = 2131361805;
+			
+			// aapt resource value: 0x7f0a000b
+			public const int NewItem = 2131361803;
+			
+			// aapt resource value: 0x7f0a000a
+			public const int NewItemField = 2131361802;
+			
+			// aapt resource value: 0x7f0a000e
+			public const int TaskName = 2131361806;
 			
 			// aapt resource value: 0x7f0a0000
 			public const int adjust_height = 2131361792;
@@ -235,17 +235,14 @@ namespace ATaskIt
 			// aapt resource value: 0x7f0a0008
 			public const int light = 2131361800;
 			
-			// aapt resource value: 0x7f0a0013
-			public const int menu_delete = 2131361811;
-			
 			// aapt resource value: 0x7f0a0012
-			public const int menu_edit = 2131361810;
+			public const int menu_delete = 2131361810;
 			
-			// aapt resource value: 0x7f0a0014
-			public const int menu_preferences = 2131361812;
+			// aapt resource value: 0x7f0a0011
+			public const int menu_edit = 2131361809;
 			
-			// aapt resource value: 0x7f0a000a
-			public const int msgText = 2131361802;
+			// aapt resource value: 0x7f0a0013
+			public const int menu_preferences = 2131361811;
 			
 			// aapt resource value: 0x7f0a0002
 			public const int none = 2131361794;
@@ -398,6 +395,27 @@ namespace ATaskIt
 			
 			// aapt resource value: 0x7f06000f
 			public const int common_signin_button_text_long = 2131099663;
+			
+			// aapt resource value: 0x7f060014
+			public const int default_web_client_id = 2131099668;
+			
+			// aapt resource value: 0x7f060015
+			public const int firebase_database_url = 2131099669;
+			
+			// aapt resource value: 0x7f060012
+			public const int gcm_defaultSenderId = 2131099666;
+			
+			// aapt resource value: 0x7f060016
+			public const int google_api_key = 2131099670;
+			
+			// aapt resource value: 0x7f060013
+			public const int google_app_id = 2131099667;
+			
+			// aapt resource value: 0x7f060017
+			public const int google_crash_reporting_api_key = 2131099671;
+			
+			// aapt resource value: 0x7f060018
+			public const int google_storage_bucket = 2131099672;
 			
 			static String()
 			{
