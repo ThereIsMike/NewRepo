@@ -190,6 +190,7 @@
     <Compile Include="DataObjects\Status.cs" />
     <Compile Include="DataObjects\TodoItem.cs" />
     <Compile Include="DataObjects\User.cs" />
+    <Compile Include="Helpers\Statistics.cs" />
     <Compile Include="Helpers\Notifications.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Models\taskitnowContext.cs" />

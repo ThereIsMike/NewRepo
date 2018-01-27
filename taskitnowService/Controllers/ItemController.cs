@@ -21,9 +21,6 @@ namespace taskitnowService.Controllers
 {
     public class ItemController : TableController<Item>
     {
-        private IDisposable Cancel;
-        private int CountNewItems = 0;
-
         // DELETE tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
         public Task DeleteItem(string id)
         {
@@ -51,24 +48,8 @@ namespace taskitnowService.Controllers
         // POST tables/TodoItem
         public async Task<IHttpActionResult> PostItem(Item item)
         {
-            this.CountNewItems++;
-            if (this.Cancel != null)
-            {
-                this.Cancel.Dispose();
-                this.Cancel = null;
-            }
-
-            this.Cancel = Observable
-             .Timer(TimeSpan.FromSeconds(60))
-             .Subscribe(
-              x =>
-             {
-                 //await SendTemplateNotificationAsync(string.Format("Items added")).ConfigureAwait(false);
-                 SendMessage("Items added");
-                 this.CountNewItems = 0;
-             });
-
-            Item current = await InsertAsync(item);
+            Statistics.Instance.IncrementItemCounter();
+            var current = await InsertAsync(item);
             return CreatedAtRoute("Tables", new { id = current.Id }, current);
         }
 
