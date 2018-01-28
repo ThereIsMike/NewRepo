@@ -3,6 +3,7 @@ using Android.Widget;
 using Android.OS;
 using System.Linq;
 using Microsoft.WindowsAzure.MobileServices;
+using Microsoft.WindowsAzure.MobileServices.SQLiteStore;
 using static Android.Net.Wifi.WifiConfiguration;
 using ATaskIt.Data;
 using Android.Views.InputMethods;
@@ -24,6 +25,7 @@ namespace ATaskIt
     {
         private ImageButton addItem;
         private ListView Items;
+        private ItemManager manager;
         private MobileServiceClient MobileService;
         private TaskElementAdapter myTasks;
         private TextView newItem;
@@ -61,21 +63,27 @@ namespace ATaskIt
         public async Task<bool> GetItemsAndDisplayAsync()
         {
             this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
-            var _item = this.MobileService.GetTable<Item>();
+
+            //var _item = this.MobileService.GetTable<Item>();
+            var _item_sync_enum = await this.manager.GetItemsAsync(true);
             var _status = this.MobileService.GetTable<Data.Status>();
 
-            var _productsenum = await _item
-                    .Where(u => u.Name != string.Empty)
-                    .ToCollectionAsync();
+            //var _productsenum = await _item
+            //        .Where(u => u.Name != string.Empty)
+            //        .ToCollectionAsync();
             var _statussenum = await _status
                    .Where(u => u.Name != string.Empty)
                    .ToCollectionAsync();
             this.tasksOnly.Clear();
-            foreach (var item in _productsenum)
+            if (_item_sync_enum != null)
+                foreach (var item in _item_sync_enum)
+                {
+                    this.tasksOnly.Add(item);
+                }
+            else
             {
-                this.tasksOnly.Add(item);
             }
-            this.myTasks = new TaskElementAdapter(this, this.tasksOnly, _item, _status, _statussenum);
+            this.myTasks = new TaskElementAdapter(this, this.tasksOnly, _status, _statussenum);
 
             this.Items.Adapter = this.myTasks;
             this.newItemField.Visibility = Android.Views.ViewStates.Visible;
@@ -164,6 +172,8 @@ namespace ATaskIt
             SetActionBar(toolbar);
             this.ActionBar.Title = "Task It";
 
+            this.manager = ItemManager.DefaultManager;
+
             var inputManager = (InputMethodManager)this.GetSystemService(Context.InputMethodService);
 
             this.newItemField = FindViewById<LinearLayout>(Resource.Id.NewItemField);
@@ -173,7 +183,8 @@ namespace ATaskIt
 
             if (this.Intent.Extras != null)
             {
-                RunOnUiThread(async () => await GetItemsAndDisplayAsync());
+                if (this.manager.IsOfflineEnabled)
+                    RunOnUiThread(async () => await GetItemsAndDisplayAsync());
             }
             this.newItemField.Visibility = Android.Views.ViewStates.Gone;
 
@@ -181,9 +192,10 @@ namespace ATaskIt
             {
                 if (this.newItem.Text != "")
                 {
-                    this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
-                    var _item = this.MobileService.GetTable<Item>();
-                    await _item.InsertAsync(new Item { Name = this.newItem.Text });
+                    //this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
+                    //var _item = this.MobileService.GetTable<Item>();
+                    //await _item.InsertAsync(new Item { Name = this.newItem.Text });
+                    await this.manager.SaveTaskAsync(new Item { Name = this.newItem.Text });
                     this.newItem.Text = "";
                 }
 

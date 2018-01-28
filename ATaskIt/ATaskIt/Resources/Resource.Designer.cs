@@ -396,6 +396,27 @@ namespace ATaskIt
 			// aapt resource value: 0x7f06000f
 			public const int common_signin_button_text_long = 2131099663;
 			
+			// aapt resource value: 0x7f060014
+			public const int default_web_client_id = 2131099668;
+			
+			// aapt resource value: 0x7f060015
+			public const int firebase_database_url = 2131099669;
+			
+			// aapt resource value: 0x7f060012
+			public const int gcm_defaultSenderId = 2131099666;
+			
+			// aapt resource value: 0x7f060016
+			public const int google_api_key = 2131099670;
+			
+			// aapt resource value: 0x7f060013
+			public const int google_app_id = 2131099667;
+			
+			// aapt resource value: 0x7f060017
+			public const int google_crash_reporting_api_key = 2131099671;
+			
+			// aapt resource value: 0x7f060018
+			public const int google_storage_bucket = 2131099672;
+			
 			static String()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

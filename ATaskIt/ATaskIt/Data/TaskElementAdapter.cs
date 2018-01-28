@@ -22,16 +22,19 @@ namespace ATaskIt.Data
         private List<Item> myItemList;
         private MobileServiceCollection<Data.Status, Data.Status> myItemStatus;
         private IMobileServiceTable<Status> myItemStatusTable;
-        private IMobileServiceTable<Item> myItemTable;
+
+        //private IMobileServiceTable<Item> myItemTable;
 
         public TaskElementAdapter(Context context, List<Item> list,
-            IMobileServiceTable<Item> table,
+
+            //IMobileServiceTable<Item> table,
             IMobileServiceTable<Status> statustable,
             MobileServiceCollection<Data.Status, Data.Status> status)
         {
             this.myItemList = list;
             this.myContext = context;
-            this.myItemTable = table;
+
+            //this.myItemTable = table;
             this.myItemStatusTable = statustable;
             this.myItemStatus = status;
         }
