@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace ATaskIt.Data
 {
-    internal class Status
+    public class Status
     {
         public DateTimeOffset? CreatedAt { get; set; }
 

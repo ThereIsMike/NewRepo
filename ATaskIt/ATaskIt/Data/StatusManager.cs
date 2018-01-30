@@ -16,20 +16,17 @@ using Microsoft.WindowsAzure.MobileServices.Sync;
 
 namespace ATaskIt.Data
 {
-    public partial class ItemManager
+    public partial class StatusManager
     {
-        private static ItemManager defaultInstance = new ItemManager();
+        private static StatusManager defaultInstance = new StatusManager();
         private IMobileServiceClient client;
-        private IMobileServiceSyncTable<Item> itemTable;
         private IMobileServiceSyncTable<Status> statusTable;
 
-        private ItemManager()
+        private StatusManager()
         {
             this.client = new MobileServiceClient(Settings.BASE_ADDRESS);
 
-            //if (this.Store == null)
             this.Store = new MobileServiceSQLiteStore("localitemstore.db");
-            this.Store.DefineTable<Item>();
             this.Store.DefineTable<Status>();
             var first = Task.Run(async () =>
             {
@@ -46,7 +43,6 @@ namespace ATaskIt.Data
             {
                 try
                 {
-                    this.itemTable = this.client.GetSyncTable<Item>();
                     this.statusTable = this.client.GetSyncTable<Status>();
                 }
                 catch (Exception ex)
@@ -56,7 +52,7 @@ namespace ATaskIt.Data
             });
         }
 
-        public static ItemManager DefaultManager
+        public static StatusManager DefaultManager
 
         {
             get
@@ -81,55 +77,15 @@ namespace ATaskIt.Data
         public bool IsOfflineEnabled
 
         {
-            get { return this.itemTable is IMobileServiceSyncTable<Item>; }
+            get { return this.statusTable is IMobileServiceSyncTable<Status>; }
         }
 
         public MobileServiceSQLiteStore Store { get; set; }
-
-        public async Task DeleteItemAsync(Item item)
-
-        {
-            await this.itemTable.DeleteAsync(item);
-        }
 
         public async Task DeleteStatusAsync(Status status)
 
         {
             await this.statusTable.DeleteAsync(status);
-        }
-
-        public async Task<ObservableCollection<Item>> GetItemsAsync(bool syncItems = false)
-
-        {
-            try
-
-            {
-                if (syncItems)
-
-                {
-                    await this.SyncAsync();
-                }
-
-                IEnumerable<Item> items = await this.itemTable
-
-                                    .Where(todoItem => todoItem.Name != string.Empty)
-
-                                    .ToEnumerableAsync();
-
-                return new ObservableCollection<Item>(items);
-            }
-            catch (MobileServiceInvalidOperationException msioe)
-
-            {
-                System.Diagnostics.Debug.WriteLine($"Invalid sync operation: {0}", msioe.Message);
-            }
-            catch (Exception e)
-
-            {
-                System.Diagnostics.Debug.WriteLine($"Sync error: {0}", e.Message);
-            }
-
-            return null;
         }
 
         public async Task<ObservableCollection<Status>> GetStatusAsync(bool syncStatus = false)
@@ -166,12 +122,6 @@ namespace ATaskIt.Data
             return null;
         }
 
-        public async Task SaveItemAsync(Item item)
-
-        {
-            await this.itemTable.InsertAsync(item);
-        }
-
         public async Task SaveStatusAsync(Status status)
 
         {
@@ -188,25 +138,15 @@ namespace ATaskIt.Data
             {
                 await this.client.SyncContext.PushAsync();
 
-                await this.itemTable.PullAsync(
+                await this.statusTable.PullAsync(
 
                     //The first parameter is a query name that is used internally by the client SDK to implement incremental sync.
 
                     //Use a different query name for each unique query in your program
 
-                    "allItems",
+                    "allStatus",
 
-                    this.itemTable.CreateQuery());
-
-                await this.statusTable.PullAsync(
-
-                   //The first parameter is a query name that is used internally by the client SDK to implement incremental sync.
-
-                   //Use a different query name for each unique query in your program
-
-                   "allStatus",
-
-                   this.statusTable.CreateQuery());
+                    this.statusTable.CreateQuery());
             }
             catch (MobileServicePushFailedException exc)
 

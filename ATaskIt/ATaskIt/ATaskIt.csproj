@@ -65,6 +65,7 @@
     <Compile Include="Data\Notification.cs" />
     <Compile Include="Data\Settings.cs" />
     <Compile Include="Data\Status.cs" />
+    <Compile Include="Data\StatusManager.cs" />
     <Compile Include="Data\TaskElementAdapter.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

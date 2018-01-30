@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,23 +21,31 @@ namespace ATaskIt.Data
         private Context myContext;
 
         private List<Item> myItemList;
-        private MobileServiceCollection<Data.Status, Data.Status> myItemStatus;
-        private IMobileServiceTable<Status> myItemStatusTable;
+        private ObservableCollection<Status> status_enum_async;
+        private ItemManager status_manager;
+
+        //private Task<ObservableCollection<Status>> status_enum_async;
+
+        //private MobileServiceCollection<Data.Status, Data.Status> myItemStatus;
+        //private IMobileServiceTable<Status> myItemStatusTable;
 
         //private IMobileServiceTable<Item> myItemTable;
 
         public TaskElementAdapter(Context context, List<Item> list,
+            ItemManager status_manager)
 
-            //IMobileServiceTable<Item> table,
-            IMobileServiceTable<Status> statustable,
-            MobileServiceCollection<Data.Status, Data.Status> status)
+        //IMobileServiceTable<Item> table,
+        //IMobileServiceTable<Status> statustable,
+        //MobileServiceCollection<Data.Status, Data.Status> status)
         {
             this.myItemList = list;
             this.myContext = context;
+            this.status_manager = status_manager;
+            Task.Run(async () => this.status_enum_async = await this.status_manager.GetStatusAsync().ConfigureAwait(false));
 
             //this.myItemTable = table;
-            this.myItemStatusTable = statustable;
-            this.myItemStatus = status;
+            //this.myItemStatusTable = statustable;
+            //this.myItemStatus = status;
         }
 
         public override int Count
@@ -68,7 +77,7 @@ namespace ATaskIt.Data
             var done = row.FindViewById<CheckBox>(Resource.Id.Done);
             try
             {
-                var status = this.myItemStatus
+                var status = this.status_enum_async
                                 .Where(u => u.Name == taskName.Text);
                 if (status.Any())
                     done.Checked = status.FirstOrDefault().Executed;
@@ -85,15 +94,14 @@ namespace ATaskIt.Data
             assigned.Tag = this.myItemList[position].Name;
 
             var users = new List<string> { "None", "Anna", "Michal" };
-            assigned.ItemSelected -= this.User_Assigned;
-            assigned.ItemSelected += this.User_Assigned;
+
             var adapter = new ArrayAdapter(this.myContext, Android.Resource.Layout.SimpleSpinnerItem, users);
             adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
             assigned.Adapter = adapter;
 
             try
             {
-                var status = this.myItemStatus
+                var status = this.status_enum_async
                                 .Where(u => u.Name == taskName.Text);
                 if (status.Any())
                 {
@@ -111,7 +119,8 @@ namespace ATaskIt.Data
             {
                 Console.WriteLine(ex.Message);
             }
-
+            assigned.ItemSelected -= this.User_Assigned;
+            assigned.ItemSelected += this.User_Assigned;
             return row;
         }
 
@@ -119,17 +128,17 @@ namespace ATaskIt.Data
         {
             var checked_name = (sender as CheckBox).Tag.ToString();
             var blocker = new Object();
-            var status = await this.myItemStatusTable
-                                    .Where(u => u.Name == checked_name)
-                                    .ToCollectionAsync().ConfigureAwait(false);
-            if (status.Count > 0)
+            var status = this.status_enum_async
+                                    .Where(u => u.Name == checked_name);
+
+            if (status.Any())
             {
-                await this.myItemStatusTable.DeleteAsync(status.FirstOrDefault());
+                await this.status_manager.DeleteStatusAsync(status.FirstOrDefault());
                 status.FirstOrDefault().Executed = (sender as CheckBox).Checked;
-                await this.myItemStatusTable.InsertAsync(status.FirstOrDefault());
+                await this.status_manager.SaveStatusAsync(status.FirstOrDefault());
             }
             else
-                await this.myItemStatusTable.InsertAsync(new Status { Name = checked_name, Executed = (sender as CheckBox).Checked });
+                await this.status_manager.SaveStatusAsync(new Status { Name = checked_name, Executed = (sender as CheckBox).Checked });
 
             Console.WriteLine(checked_name + " is " + (sender as CheckBox).Checked);
         }
@@ -140,17 +149,17 @@ namespace ATaskIt.Data
             {
                 var selected_product = (sender as Spinner).Tag.ToString();
                 var selected_user = (sender as Spinner).SelectedItem.ToString();
-                var status = await this.myItemStatusTable
-                                        .Where(u => u.Name == selected_product)
-                                        .ToCollectionAsync().ConfigureAwait(false);
-                if (status.Count > 0)
+                var status = this.status_enum_async
+                                        .Where(u => u.Name == selected_product);
+
+                if (status.Any())
                 {
-                    await this.myItemStatusTable.DeleteAsync(status.FirstOrDefault());
+                    await this.status_manager.DeleteStatusAsync(status.FirstOrDefault());
                     status.FirstOrDefault().Selected = selected_user;
-                    await this.myItemStatusTable.InsertAsync(status.FirstOrDefault());
+                    await this.status_manager.SaveStatusAsync(status.FirstOrDefault());
                 }
                 else
-                    await this.myItemStatusTable.InsertAsync(new Status { Name = selected_product, Selected = selected_user });
+                    await this.status_manager.SaveStatusAsync(new Status { Name = selected_product, Selected = selected_user });
 
                 Console.WriteLine(selected_user + " assigned to " + selected_product);
             }
