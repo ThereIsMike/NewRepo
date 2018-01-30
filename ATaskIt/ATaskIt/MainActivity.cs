@@ -30,31 +30,19 @@ namespace ATaskIt
         private TaskElementAdapter myTasks;
         private TextView newItem;
         private LinearLayout newItemField;
-
-        //private StatusManager status_manager;
         private List<Item> tasksOnly = new List<Item>();
 
         public static Context Instance { get; private set; }
 
         public async Task<bool> DeleteExecuted()
         {
-            //var _item = this.MobileService.GetTable<Item>();
             var item_enum_async = await this.item_manager.GetItemsAsync();
             var status_enum_async = await this.item_manager.GetStatusAsync();
-
-            //var _status = this.MobileService.GetTable<Data.Status>();
-
-            //var _statussenum = await _status
-            //       .Where(u => u.Executed)
-            //       .ToCollectionAsync();
-
-            //var _productsenum = await _item
-            //.Where(u => u.Name != string.Empty)
-            //.ToCollectionAsync();
+            var status_enum_to_delete = status_enum_async.Where(s => s.Executed);
 
             foreach (var item in item_enum_async)
             {
-                var itemstodelete = status_enum_async.Where(i => i.Name == item.Name).FirstOrDefault();
+                var itemstodelete = status_enum_to_delete.Where(i => i.Name == item.Name).FirstOrDefault();
                 if (itemstodelete != null)
                 {
                     await this.item_manager.DeleteItemAsync(item);
@@ -65,24 +53,11 @@ namespace ATaskIt
             return true;
         }
 
-        public async Task<bool> GetItemsAndDisplayAsync()
+        public async Task<bool> GetItemsAndDisplayAsync(bool with_sync)
         {
             this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
-
-            //var _item = this.MobileService.GetTable<Item>();
-            var _item_sync_enum = await this.item_manager.GetItemsAsync(true);
-            var _status_sync_enum = await this.item_manager.GetStatusAsync(true);
-
-            //var ccc= await this.manager.
-
-            //var _status = this.MobileService.GetTable<Data.Status>();
-
-            //var _productsenum = await _item
-            //        .Where(u => u.Name != string.Empty)
-            //        .ToCollectionAsync();
-            //var _statussenum = await _status
-            //       .Where(u => u.Name != string.Empty)
-            //       .ToCollectionAsync();
+            var _item_sync_enum = await this.item_manager.GetItemsAsync(with_sync);
+            var _status_sync_enum = await this.item_manager.GetStatusAsync(with_sync);
             this.tasksOnly.Clear();
             if (_item_sync_enum != null)
                 foreach (var item in _item_sync_enum)
@@ -107,7 +82,7 @@ namespace ATaskIt
 
         public override bool OnNavigateUp()
         {
-            RunOnUiThread(async () => await GetItemsAndDisplayAsync());
+            RunOnUiThread(async () => await GetItemsAndDisplayAsync(true));
             return base.OnNavigateUp();
         }
 
@@ -116,14 +91,14 @@ namespace ATaskIt
             switch (item.TitleFormatted.ToString())
             {
                 case "Refresh":
-                    RunOnUiThread(async () => await GetItemsAndDisplayAsync());
+                    RunOnUiThread(async () => await GetItemsAndDisplayAsync(true));
                     return true;
 
                 case "Delete":
                     Toast.MakeText(this, "Deleting... ",
                     ToastLength.Short).Show();
                     var deleting = Task.Run(async () => await this.DeleteExecuted());
-                    deleting.ContinueWith(x => RunOnUiThread(async () => await GetItemsAndDisplayAsync()));
+                    deleting.ContinueWith(x => RunOnUiThread(async () => await GetItemsAndDisplayAsync(false)));
                     return true;
 
                 case "Preferences":
@@ -183,9 +158,6 @@ namespace ATaskIt
 
             this.item_manager = ItemManager.DefaultManager;
 
-            //this.status_manager.Store = this.item_manager.Store; //reuse store
-            //this.status_manager = StatusManager.DefaultManager;
-
             var inputManager = (InputMethodManager)this.GetSystemService(Context.InputMethodService);
 
             this.newItemField = FindViewById<LinearLayout>(Resource.Id.NewItemField);
@@ -193,28 +165,26 @@ namespace ATaskIt
             this.Items = FindViewById<ListView>(Resource.Id.ItemList);
             this.addItem = FindViewById<ImageButton>(Resource.Id.AddItem);
 
-            if (this.Intent.Extras != null)
-            {
-                if (this.item_manager.IsOfflineEnabled)
-                    RunOnUiThread(async () => await GetItemsAndDisplayAsync());
-            }
+            //if (this.Intent.Extras != null)
+            //{
+            //    if (this.item_manager.IsOfflineEnabled)
+            //        RunOnUiThread(async () => await GetItemsAndDisplayAsync(true));
+            //}
             this.newItemField.Visibility = Android.Views.ViewStates.Gone;
 
             this.addItem.Click += async (o, e) =>
             {
                 if (this.newItem.Text != "")
                 {
-                    //this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
-                    //var _item = this.MobileService.GetTable<Item>();
-                    //await _item.InsertAsync(new Item { Name = this.newItem.Text });
                     await this.item_manager.SaveItemAsync(new Item { Name = this.newItem.Text });
                     this.newItem.Text = "";
+                    RunOnUiThread(async () => await GetItemsAndDisplayAsync(false));
                 }
 
                 inputManager.HideSoftInputFromWindow(this.newItem.WindowToken, 0);
             };
 
-            RunOnUiThread(async () => await GetItemsAndDisplayAsync());
+            RunOnUiThread(async () => await GetItemsAndDisplayAsync(true));
         }
     }
 }

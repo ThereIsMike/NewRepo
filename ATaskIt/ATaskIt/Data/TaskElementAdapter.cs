@@ -65,7 +65,7 @@ namespace ATaskIt.Data
 
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
-            View row = convertView;
+            var row = convertView;
             if (row == null)
             {
                 row = LayoutInflater.From(this.myContext).Inflate(Resource.Layout.TaskElement, null, false);
@@ -133,9 +133,12 @@ namespace ATaskIt.Data
 
             if (status.Any())
             {
-                await this.status_manager.DeleteStatusAsync(status.FirstOrDefault());
-                status.FirstOrDefault().Executed = (sender as CheckBox).Checked;
-                await this.status_manager.SaveStatusAsync(status.FirstOrDefault());
+                var _executed = (sender as CheckBox).Checked;
+                if (status.FirstOrDefault().Executed != _executed)
+                {
+                    status.FirstOrDefault().Executed = (sender as CheckBox).Checked;
+                    await this.status_manager.SaveStatusAsync(status.FirstOrDefault());
+                }
             }
             else
                 await this.status_manager.SaveStatusAsync(new Status { Name = checked_name, Executed = (sender as CheckBox).Checked });
@@ -154,9 +157,11 @@ namespace ATaskIt.Data
 
                 if (status.Any())
                 {
-                    await this.status_manager.DeleteStatusAsync(status.FirstOrDefault());
-                    status.FirstOrDefault().Selected = selected_user;
-                    await this.status_manager.SaveStatusAsync(status.FirstOrDefault());
+                    if (status.FirstOrDefault().Selected != selected_user)
+                    {
+                        status.FirstOrDefault().Selected = selected_user;
+                        await this.status_manager.SaveStatusAsync(status.FirstOrDefault());
+                    }
                 }
                 else
                     await this.status_manager.SaveStatusAsync(new Status { Name = selected_product, Selected = selected_user });

@@ -49,6 +49,8 @@ namespace taskitnowService.Controllers
         public async Task<IHttpActionResult> PostItem(Item item)
         {
             Statistics.Instance.IncrementItemCounter();
+
+            //var current = await InsertAsync(item);
             var current = await InsertAsync(item);
             return CreatedAtRoute("Tables", new { id = current.Id }, current);
         }
@@ -56,7 +58,7 @@ namespace taskitnowService.Controllers
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            taskitnowContext context = new taskitnowContext();
+            var context = new taskitnowContext();
             this.DomainManager = new EntityDomainManager<Item>(context, this.Request);
         }
 
@@ -93,8 +95,8 @@ namespace taskitnowService.Controllers
         /// <returns></returns>
         private async Task SendTemplateNotificationAsync(string item)
         {
-            NotificationHubClient hub = NotificationHubClient.CreateClientFromConnectionString(Settings.HUB_ENDPOINT, Settings.HUB_NAME);
-            Dictionary<string, string> templateParams = new Dictionary<string, string>();
+            var hub = NotificationHubClient.CreateClientFromConnectionString(Settings.HUB_ENDPOINT, Settings.HUB_NAME);
+            var templateParams = new Dictionary<string, string>();
             templateParams["messageParam"] = item;
             await hub.SendTemplateNotificationAsync(templateParams, "");
         }

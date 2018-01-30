@@ -100,7 +100,7 @@ namespace ATaskIt.Data
                     await this.SyncAsync();
                 }
 
-                IEnumerable<Status> status = await this.statusTable
+                var status = await this.statusTable
 
                                     .Where(todoItem => todoItem.Name != string.Empty)
 

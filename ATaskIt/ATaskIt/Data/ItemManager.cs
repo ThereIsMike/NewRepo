@@ -110,7 +110,7 @@ namespace ATaskIt.Data
                     await this.SyncAsync();
                 }
 
-                IEnumerable<Item> items = await this.itemTable
+                var items = await this.itemTable
 
                                     .Where(todoItem => todoItem.Name != string.Empty)
 
@@ -144,7 +144,7 @@ namespace ATaskIt.Data
                     await this.SyncAsync();
                 }
 
-                IEnumerable<Status> status = await this.statusTable
+                var status = await this.statusTable
 
                                     .Where(todoItem => todoItem.Name != string.Empty)
 
@@ -167,15 +167,31 @@ namespace ATaskIt.Data
         }
 
         public async Task SaveItemAsync(Item item)
-
         {
-            await this.itemTable.InsertAsync(item);
+            if (item.Id == null)
+
+            {
+                await this.itemTable.InsertAsync(item);
+            }
+            else
+
+            {
+                await this.itemTable.UpdateAsync(item);
+            }
         }
 
         public async Task SaveStatusAsync(Status status)
-
         {
-            await this.statusTable.InsertAsync(status);
+            if (status.Id == null)
+
+            {
+                await this.statusTable.InsertAsync(status);
+            }
+            else
+
+            {
+                await this.statusTable.UpdateAsync(status);
+            }
         }
 
         public async Task SyncAsync()
