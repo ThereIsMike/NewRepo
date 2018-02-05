@@ -56,8 +56,8 @@ namespace ATaskIt
         public async Task<bool> GetItemsAndDisplayAsync(bool with_sync)
         {
             this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
-            var _item_sync_enum = await this.item_manager.GetItemsAsync(with_sync);
-            var _status_sync_enum = await this.item_manager.GetStatusAsync(with_sync);
+            var _item_sync_enum = await this.item_manager.GetItemsAsync(true);
+            var _status_sync_enum = await this.item_manager.GetStatusAsync(true);
             this.tasksOnly.Clear();
             if (_item_sync_enum != null)
                 foreach (var item in _item_sync_enum)
@@ -66,6 +66,12 @@ namespace ATaskIt
                 }
             else
             {
+                var _item_sync_enum_offline = await this.item_manager.GetItemsAsync(false);
+                var _status_sync_enum_offline = await this.item_manager.GetStatusAsync(false);
+                foreach (var item in _item_sync_enum_offline)
+                {
+                    this.tasksOnly.Add(item);
+                }
             }
             this.myTasks = new TaskElementAdapter(this, this.tasksOnly, this.item_manager);
 

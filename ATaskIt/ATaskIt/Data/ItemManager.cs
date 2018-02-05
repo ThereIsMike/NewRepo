@@ -86,6 +86,23 @@ namespace ATaskIt.Data
 
         public MobileServiceSQLiteStore Store { get; set; }
 
+        public bool CheckServiceAccess()
+        {
+            try
+            {
+                this.itemTable = this.client.GetSyncTable<Item>();
+                this.statusTable = this.client.GetSyncTable<Status>();
+
+                return this.itemTable is IMobileServiceSyncTable<Item>;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+
+            return false;
+        }
+
         public async Task DeleteItemAsync(Item item)
 
         {
