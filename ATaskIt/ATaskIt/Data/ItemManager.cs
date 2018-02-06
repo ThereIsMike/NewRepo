@@ -26,8 +26,6 @@ namespace ATaskIt.Data
         private ItemManager()
         {
             this.client = new MobileServiceClient(Settings.BASE_ADDRESS);
-
-            //if (this.Store == null)
             this.Store = new MobileServiceSQLiteStore("localitemstore.db");
             this.Store.DefineTable<Item>();
             this.Store.DefineTable<Status>();

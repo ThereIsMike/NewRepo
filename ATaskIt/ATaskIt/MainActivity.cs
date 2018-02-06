@@ -17,22 +17,29 @@ using Android.Util;
 using System.Threading.Tasks;
 using ToShare;
 using Android.Views;
+using System.Collections.ObjectModel;
 
 namespace ATaskIt
 {
     [Activity(Label = "ATaskIt", MainLauncher = true)]
     public class MainActivity : Activity
     {
+        private ObservableCollection<Data.Status> _status_sync_enum;
+        private ObservableCollection<Data.Status> _status_sync_enum_offline;
         private ImageButton addItem;
+        private ProgressDialog busyIndicator;
+        private TextView debuginformation;
         private ItemManager item_manager;
         private ListView Items;
         private MobileServiceClient MobileService;
-        private TaskElementAdapter myTasks;
+        private ElementAdapter myTasks;
         private TextView newItem;
         private LinearLayout newItemField;
         private List<Item> tasksOnly = new List<Item>();
 
         public static Context Instance { get; private set; }
+
+        public bool online { get; private set; }
 
         public async Task<bool> DeleteExecuted()
         {
@@ -56,26 +63,46 @@ namespace ATaskIt
         public async Task<bool> GetItemsAndDisplayAsync(bool with_sync)
         {
             this.MobileService = new MobileServiceClient(Settings.BASE_ADDRESS);
-            var _item_sync_enum = await this.item_manager.GetItemsAsync(true);
-            var _status_sync_enum = await this.item_manager.GetStatusAsync(true);
-            this.tasksOnly.Clear();
-            if (_item_sync_enum != null)
-                foreach (var item in _item_sync_enum)
-                {
-                    this.tasksOnly.Add(item);
-                }
-            else
+            this.busyIndicator = ProgressDialog.Show(this, "", "Updating...", true);
+            this.busyIndicator.SetProgressStyle(ProgressDialogStyle.Spinner);
+
+            try
             {
-                var _item_sync_enum_offline = await this.item_manager.GetItemsAsync(false);
-                var _status_sync_enum_offline = await this.item_manager.GetStatusAsync(false);
-                foreach (var item in _item_sync_enum_offline)
-                {
-                    this.tasksOnly.Add(item);
+                var _item_sync_enum = await this.item_manager.GetItemsAsync(true);
+
+                this.tasksOnly.Clear();
+                if (_item_sync_enum != null)
+                { // online
+                    this.online = true;
+                    this._status_sync_enum = await this.item_manager.GetStatusAsync(true);
+                    this.debuginformation.Text = "Fresh from: " + DateTime.Now.ToString("dd-MM-yyyy HH:mm");
+                    foreach (var item in _item_sync_enum)
+                    {
+                        this.tasksOnly.Add(item);
+                    }
                 }
+                else
+                { //offline
+                    this.debuginformation.Text = "Backup from: " + DateTime.Now.ToString("dd-MM-yyyy HH:mm");
+                    this.online = false;
+                    var _item_sync_enum_offline = await this.item_manager.GetItemsAsync(false);
+                    this._status_sync_enum_offline = await this.item_manager.GetStatusAsync(false);
+                    foreach (var item in _item_sync_enum_offline)
+                    {
+                        this.tasksOnly.Add(item);
+                    }
+                }
+
+                this.myTasks = new ElementAdapter(this, this.tasksOnly, this.item_manager, this.online ? this._status_sync_enum : this._status_sync_enum_offline);
             }
-            this.myTasks = new TaskElementAdapter(this, this.tasksOnly, this.item_manager);
+            catch (Exception ex)
+            {
+                this.debuginformation.Text = ex.Message;
+                this.busyIndicator.Dismiss();
+            }
 
             this.Items.Adapter = this.myTasks;
+            this.busyIndicator.Dismiss();
             this.newItemField.Visibility = Android.Views.ViewStates.Visible;
             return true;
         }
@@ -170,6 +197,7 @@ namespace ATaskIt
             this.newItem = FindViewById<TextView>(Resource.Id.NewItem);
             this.Items = FindViewById<ListView>(Resource.Id.ItemList);
             this.addItem = FindViewById<ImageButton>(Resource.Id.AddItem);
+            this.debuginformation = FindViewById<TextView>(Resource.Id.debuginformation);
 
             //if (this.Intent.Extras != null)
             //{
@@ -192,5 +220,7 @@ namespace ATaskIt
 
             RunOnUiThread(async () => await GetItemsAndDisplayAsync(true));
         }
+
+        private ProgressDialog GetBusyIndicator() => this.busyIndicator;
     }
 }

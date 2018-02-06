@@ -15,37 +15,19 @@ using Microsoft.WindowsAzure.MobileServices;
 
 namespace ATaskIt.Data
 {
-    internal class TaskElementAdapter : BaseAdapter<Item>
+    internal class ElementAdapter : BaseAdapter<Item>
     {
-        //private Switch done;
         private Context myContext;
-
         private List<Item> myItemList;
         private ObservableCollection<Status> status_enum_async;
         private ItemManager status_manager;
 
-        //private Task<ObservableCollection<Status>> status_enum_async;
-
-        //private MobileServiceCollection<Data.Status, Data.Status> myItemStatus;
-        //private IMobileServiceTable<Status> myItemStatusTable;
-
-        //private IMobileServiceTable<Item> myItemTable;
-
-        public TaskElementAdapter(Context context, List<Item> list,
-            ItemManager status_manager)
-
-        //IMobileServiceTable<Item> table,
-        //IMobileServiceTable<Status> statustable,
-        //MobileServiceCollection<Data.Status, Data.Status> status)
+        public ElementAdapter(Context context, List<Item> list, ItemManager status_manager, ObservableCollection<Status> allstatus)
         {
             this.myItemList = list;
             this.myContext = context;
             this.status_manager = status_manager;
-            Task.Run(async () => this.status_enum_async = await this.status_manager.GetStatusAsync().ConfigureAwait(false));
-
-            //this.myItemTable = table;
-            //this.myItemStatusTable = statustable;
-            //this.myItemStatus = status;
+            this.status_enum_async = allstatus;
         }
 
         public override int Count

@@ -6,6 +6,12 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
+    <TextView
+        android:text="Information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/debuginformation"
+        android:foreground="@android:color/holo_blue_bright" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"

@@ -196,26 +196,26 @@ namespace ATaskIt
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0a000c
-			public const int AddItem = 2131361804;
+			// aapt resource value: 0x7f0a000d
+			public const int AddItem = 2131361805;
+			
+			// aapt resource value: 0x7f0a0011
+			public const int Assigned = 2131361809;
 			
 			// aapt resource value: 0x7f0a0010
-			public const int Assigned = 2131361808;
-			
-			// aapt resource value: 0x7f0a000f
-			public const int Done = 2131361807;
-			
-			// aapt resource value: 0x7f0a000d
-			public const int ItemList = 2131361805;
-			
-			// aapt resource value: 0x7f0a000b
-			public const int NewItem = 2131361803;
-			
-			// aapt resource value: 0x7f0a000a
-			public const int NewItemField = 2131361802;
+			public const int Done = 2131361808;
 			
 			// aapt resource value: 0x7f0a000e
-			public const int TaskName = 2131361806;
+			public const int ItemList = 2131361806;
+			
+			// aapt resource value: 0x7f0a000c
+			public const int NewItem = 2131361804;
+			
+			// aapt resource value: 0x7f0a000b
+			public const int NewItemField = 2131361803;
+			
+			// aapt resource value: 0x7f0a000f
+			public const int TaskName = 2131361807;
 			
 			// aapt resource value: 0x7f0a0000
 			public const int adjust_height = 2131361792;
@@ -229,20 +229,23 @@ namespace ATaskIt
 			// aapt resource value: 0x7f0a0007
 			public const int dark = 2131361799;
 			
+			// aapt resource value: 0x7f0a000a
+			public const int debuginformation = 2131361802;
+			
 			// aapt resource value: 0x7f0a0003
 			public const int icon_only = 2131361795;
 			
 			// aapt resource value: 0x7f0a0008
 			public const int light = 2131361800;
 			
-			// aapt resource value: 0x7f0a0012
-			public const int menu_delete = 2131361810;
-			
-			// aapt resource value: 0x7f0a0011
-			public const int menu_edit = 2131361809;
-			
 			// aapt resource value: 0x7f0a0013
-			public const int menu_preferences = 2131361811;
+			public const int menu_delete = 2131361811;
+			
+			// aapt resource value: 0x7f0a0012
+			public const int menu_edit = 2131361810;
+			
+			// aapt resource value: 0x7f0a0014
+			public const int menu_preferences = 2131361812;
 			
 			// aapt resource value: 0x7f0a0002
 			public const int none = 2131361794;
